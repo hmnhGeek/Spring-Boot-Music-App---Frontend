@@ -24,11 +24,12 @@ const App = () => {
           {songsList.map((x) => (
             <li
               key={x.id}
-              onClick={() => setSelectedSong(x.id)} // Update selected song on click
+              onClick={() => setSelectedSong(x)} // Update selected song on click
               style={{
                 cursor: "pointer",
                 padding: "10px",
-                background: selectedSong === x.id ? "#f0f0f0" : "transparent",
+                background:
+                  selectedSong?.id === x.id ? "#f0f0f0" : "transparent",
               }}
             >
               {x.originalName}
@@ -40,7 +41,10 @@ const App = () => {
       {/* Right section for the player */}
       {selectedSong && (
         <div className="right-section">
-          <SongPlayer songId={selectedSong} />
+          <SongPlayer
+            songId={selectedSong.id}
+            songTitle={selectedSong.originalName}
+          />
         </div>
       )}
     </div>

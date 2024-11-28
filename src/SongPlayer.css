@@ -26,7 +26,7 @@
 
 .cover-image {
   width: 100%; /* Adjust width to be a percentage of the player width */
-  max-width: 400px; /* You can set a max-width to prevent it from getting too large */
+  max-width: 500px; /* You can set a max-width to prevent it from getting too large */
   height: 100%; /* Adjust height to make the image taller */
   object-fit: cover; /* Keeps the aspect ratio intact and covers the entire box */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -35,7 +35,7 @@
 /* Progress Bar */
 .progress-bar-container {
   width: 100%;
-  margin: 10px 0;
+  margin: 50px 0;
 }
 
 .progress-bar {
@@ -69,7 +69,7 @@
   justify-content: center; /* Horizontally center the button */
   align-items: center; /* Vertically center the button */
   margin-top: 20px; /* Adjust top margin as needed */
-  height: 100%; /* Ensure the container takes full height */
+  height: 10%; /* Ensure the container takes full height */
 }
 
 .play-pause-btn {
@@ -102,4 +102,13 @@
 
 .play-pause-btn.playing:hover {
   background-color: #218838;
+}
+
+/* Song Title */
+.song-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px; /* Space between the title and the progress bar */
+  text-align: center;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./SongPlayer.css"; // Importing the CSS for styling
 
-const SongPlayer = ({ songId }) => {
+const SongPlayer = ({ songId, songTitle }) => {
   const [audioSrc, setAudioSrc] = useState(null);
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false); // State to manage play/pause
@@ -122,10 +122,11 @@ const SongPlayer = ({ songId }) => {
 
   return (
     <div className="player-container">
-      {/* {error && <p className="error-message">{error}</p>}{" "} */}
-      {/* Only show error message if there's an actual error */}
       {audioSrc && coverImage && (
         <div className="player">
+          {/* Song Title */}
+          <div className="song-title">{songTitle}</div>
+
           {/* Song Cover */}
           <div className="cover-container">
             <img src={coverImage} alt="Song Cover" className="cover-image" />
