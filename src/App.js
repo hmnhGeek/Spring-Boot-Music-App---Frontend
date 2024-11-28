@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import SongPlayer from "./SongPlayer";
 
-function App() {
+const App = () => {
+  const [songsList, setSongsList] = useState([]);
+  const [selectedSong, setSelectedSong] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_SONG_API_BASE}/get-song-list`)
+      .then((response) => {
+        setSongsList(response.data);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ul>
+        {songsList.map((x) => (
+          <li
+            key={x.id}
+            onClick={() => setSelectedSong(x.id)} // Update selected song on click
+            style={{
+              cursor: "pointer",
+              padding: "10px",
+              background: selectedSong === x.id ? "#f0f0f0" : "transparent",
+            }}
+          >
+            {x.originalName}
+          </li>
+        ))}
+      </ul>
+      {selectedSong && <SongPlayer songId={selectedSong} />}{" "}
+      {/* Play song immediately */}
     </div>
   );
-}
+};
 
 export default App;
