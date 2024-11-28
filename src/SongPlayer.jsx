@@ -12,15 +12,13 @@ const SongPlayer = ({ songId }) => {
   useEffect(() => {
     if (!songId) return;
 
-    // Function to fetch the audio file
     const fetchSong = async () => {
       try {
-        setError(null); // Clear previous errors
-        setAudioSrc(null); // Clear previous audio source
-        setProgress(0); // Reset progress
+        setError(null); // Reset error before starting new fetch
+
         if (audioRef.current) {
-          audioRef.current.pause(); // Stop the current audio if playing
-          audioRef.current.currentTime = 0; // Reset the current time
+          audioRef.current.pause(); // Stop any currently playing audio
+          audioRef.current.currentTime = 0; // Reset time to start
           setIsPlaying(false); // Ensure the state reflects that it's stopped
         }
 
@@ -34,16 +32,19 @@ const SongPlayer = ({ songId }) => {
 
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        setAudioSrc(url); // Set the audio source
+        setAudioSrc(url); // Set the audio source URL
       } catch (err) {
         setError("Could not load the song. Please try again.");
-        console.error(err);
+        console.error(err); // Log the actual error
       }
     };
 
-    // Fetch the cover image
     const fetchCoverImage = async () => {
       try {
+        // Reset cover image state before fetching
+        setCoverImage(null);
+
+        // Fetch the cover image
         const coverResponse = await fetch(
           `${process.env.REACT_APP_SONG_API_BASE}/get-song-cover-image/${songId}`
         );
@@ -58,10 +59,11 @@ const SongPlayer = ({ songId }) => {
         setCoverImage(coverUrl); // Set the cover image URL
       } catch (err) {
         setError("Could not load the cover image. Please try again.");
-        console.error(err);
+        console.error(err); // Log the actual error
       }
     };
 
+    // Fetch song and cover image when songId changes
     fetchSong();
     fetchCoverImage();
 
@@ -80,7 +82,19 @@ const SongPlayer = ({ songId }) => {
   useEffect(() => {
     if (audioRef.current && audioSrc) {
       if (isPlaying) {
-        audioRef.current.play(); // Play the song when `isPlaying` is true
+        const playPromise = audioRef.current.play(); // Attempt to play the audio
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              // Play started successfully
+              console.log("Playback started.");
+            })
+            .catch((error) => {
+              // Handle error if playback is prevented (e.g., autoplay restrictions)
+              setError("Could not autoplay the song. Please try manually.");
+              console.error(error);
+            });
+        }
       } else {
         audioRef.current.pause(); // Pause when `isPlaying` is false
       }
@@ -108,7 +122,8 @@ const SongPlayer = ({ songId }) => {
 
   return (
     <div className="player-container">
-      {error && <p className="error-message">{error}</p>}
+      {/* {error && <p className="error-message">{error}</p>}{" "} */}
+      {/* Only show error message if there's an actual error */}
       {audioSrc && coverImage && (
         <div className="player">
           {/* Song Cover */}
