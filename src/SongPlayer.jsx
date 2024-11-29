@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./SongPlayer.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 
 const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
   const [audioSrc, setAudioSrc] = useState(null);
@@ -137,11 +139,8 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
           </span>
 
           <div className="play-pause-btn-container">
-            <button
-              className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
-              onClick={togglePlayPause}
-            >
-              {isPlaying ? "⏸️" : "▶️"}
+            <button onClick={togglePlayPause} className="play-pause-btn">
+              <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
             </button>
           </div>
           <div className="progress-bar-container">
@@ -196,11 +195,8 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
             </div>
 
             <div className="play-pause-btn-container">
-              <button
-                className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
-                onClick={togglePlayPause}
-              >
-                {isPlaying ? "⏸️" : "▶"}
+              <button onClick={togglePlayPause} className="play-pause-btn">
+                <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
               </button>
             </div>
           </div>
