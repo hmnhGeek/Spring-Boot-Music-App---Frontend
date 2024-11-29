@@ -122,9 +122,19 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
     >
       {/* Minimized version (horizontal strip) */}
       {isMinimized && (
-        <div className="minimized-strip" onClick={() => setIsMinimized(false)}>
-          <img src={coverImage} alt="Song Cover" className="cover-small" />
-          <span className="song-title-small">{song.originalName}</span>
+        <div className="minimized-strip">
+          <img
+            src={coverImage}
+            alt="Song Cover"
+            className="cover-small"
+            onClick={() => setIsMinimized(false)}
+          />
+          <span
+            className="song-title-small"
+            onClick={() => setIsMinimized(false)}
+          >
+            {song.originalName}
+          </span>
 
           <div className="play-pause-btn-container">
             <button

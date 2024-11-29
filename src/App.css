@@ -5,6 +5,11 @@
   transition: width 0.3s ease;
 }
 
+.song-list {
+  width: 100%;
+  padding: 10px;
+}
+
 .left-section.with-player {
   width: 50%;
 }
