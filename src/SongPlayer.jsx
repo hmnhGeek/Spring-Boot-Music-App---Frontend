@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./SongPlayer.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faPause, faMinimize } from "@fortawesome/free-solid-svg-icons";
 
 const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
   const [audioSrc, setAudioSrc] = useState(null);
@@ -165,9 +165,14 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
       {/* Full player view */}
       {!isMinimized && (
         <>
-          <button className="minimize-btn" onClick={() => setIsMinimized(true)}>
-            Minimize
-          </button>
+          <div style={{ float: "right" }}>
+            <button
+              className="minimize-btn"
+              onClick={() => setIsMinimized(true)}
+            >
+              <FontAwesomeIcon icon={faMinimize} />
+            </button>
+          </div>
           <div className="player">
             <div className="header">
               <div className="song-title">{song.originalName}</div>
