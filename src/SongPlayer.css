@@ -20,6 +20,7 @@
   padding: 10px;
   bottom: 0;
   width: 100%;
+  padding-top: 0px;
 }
 
 .player-container.expanded {
@@ -46,6 +47,7 @@
 .song-title-small {
   color: white;
   font-size: 18px;
+  width: 30%;
 }
 
 /* Full Player View */
@@ -76,8 +78,8 @@
 }
 
 .play-pause-btn {
-  font-size: 30px;
-  padding: 10px;
+  font-size: 20px;
+  padding: 20px;
   background-color: #4caf50;
   border: none;
   border-radius: 100%;

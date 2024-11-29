@@ -119,6 +119,38 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
         <div className="minimized-strip" onClick={() => setIsMinimized(false)}>
           <img src={coverImage} alt="Song Cover" className="cover-small" />
           <span className="song-title-small">{song.originalName}</span>
+
+          <div className="play-pause-btn-container">
+            <button
+              className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
+              onClick={togglePlayPause}
+            >
+              {isPlaying ? "Play" : "Pause"}
+            </button>
+          </div>
+          <div className="progress-bar-container">
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={progress}
+              onChange={(e) => {
+                if (audioRef.current) {
+                  const duration = audioRef.current.duration;
+                  audioRef.current.currentTime =
+                    (e.target.value / 100) * duration;
+                }
+              }}
+              className="progress-bar"
+            />
+          </div>
+
+          <audio
+            ref={audioRef}
+            src={audioSrc}
+            onTimeUpdate={handleTimeUpdate}
+            onEnded={() => setIsPlaying(false)}
+          />
         </div>
       )}
 
@@ -159,7 +191,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
                 className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
                 onClick={togglePlayPause}
               >
-                {isPlaying ? "▶" : "⏸"}
+                {isPlaying ? "Play" : "Pause"}
               </button>
             </div>
 
