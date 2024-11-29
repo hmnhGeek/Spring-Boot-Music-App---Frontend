@@ -141,7 +141,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
               className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
               onClick={togglePlayPause}
             >
-              {isPlaying ? "Pause" : "Play"}
+              {isPlaying ? "⏸️" : "▶️"}
             </button>
           </div>
           <div className="progress-bar-container">
@@ -200,7 +200,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
                 className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
                 onClick={togglePlayPause}
               >
-                {isPlaying ? "Pause" : "Play"}
+                {isPlaying ? "⏸️" : "▶"}
               </button>
             </div>
           </div>

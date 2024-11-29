@@ -73,22 +73,17 @@
 }
 
 .play-pause-btn-container {
-  margin-bottom: 20px;
+  margin: 30px 0;
   text-align: center;
 }
 
 .play-pause-btn {
   font-size: 20px;
-  padding: 20px;
   background-color: #4caf50;
   border: none;
   border-radius: 100%;
   color: white;
   cursor: pointer;
-}
-
-.play-pause-btn.playing {
-  background-color: #ff9800;
 }
 
 .header {
