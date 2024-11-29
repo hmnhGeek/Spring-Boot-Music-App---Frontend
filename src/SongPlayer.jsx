@@ -9,7 +9,49 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [coverImage, setCoverImage] = useState(null);
+  const [dominantColor, setDominantColor] = useState(null); // Store the dominant color
   const audioRef = useRef(null);
+
+  // Function to get the dominant color from an image using canvas
+  const getDominantColor = (imageUrl) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = imageUrl;
+      img.crossOrigin = "Anonymous"; // To avoid CORS issues if the image is from a different domain
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const width = img.width;
+        const height = img.height;
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const pixels = imageData.data;
+
+        let r = 0,
+          g = 0,
+          b = 0;
+
+        // Loop through all pixels to average the color
+        for (let i = 0; i < pixels.length; i += 4) {
+          r += pixels[i];
+          g += pixels[i + 1];
+          b += pixels[i + 2];
+        }
+
+        const pixelCount = pixels.length / 4;
+        r = Math.floor(r / pixelCount);
+        g = Math.floor(g / pixelCount);
+        b = Math.floor(b / pixelCount);
+
+        resolve(`rgb(${r},${g},${b})`);
+      };
+      img.onerror = reject;
+    });
+  };
 
   useEffect(() => {
     if (!song) return;
@@ -56,6 +98,10 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
         const blob = await coverResponse.blob();
         const coverUrl = URL.createObjectURL(blob);
         setCoverImage(coverUrl);
+
+        // Extract the dominant color from the cover image
+        const dominantColor = await getDominantColor(coverUrl);
+        setDominantColor(dominantColor);
       } catch (err) {
         setError("Could not load the cover image. Please try again.");
         console.error(err);
@@ -121,6 +167,9 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
   return (
     <div
       className={`player-container ${isMinimized ? "minimized" : "expanded"}`}
+      style={{
+        backgroundColor: dominantColor, // Set the background color dynamically
+      }}
     >
       {/* Minimized version (horizontal strip) */}
       {isMinimized && (
@@ -139,7 +188,11 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
           </span>
 
           <div className="play-pause-btn-container">
-            <button onClick={togglePlayPause} className="play-pause-btn">
+            <button
+              onClick={togglePlayPause}
+              style={{ backgroundColor: dominantColor }}
+              className="play-pause-btn"
+            >
               <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
             </button>
           </div>
@@ -200,7 +253,11 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
             </div>
 
             <div className="play-pause-btn-container">
-              <button onClick={togglePlayPause} className="play-pause-btn">
+              <button
+                onClick={togglePlayPause}
+                className="play-pause-btn"
+                style={{ backgroundColor: dominantColor }}
+              >
                 <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
               </button>
             </div>
