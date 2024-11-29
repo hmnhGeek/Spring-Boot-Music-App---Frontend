@@ -1,73 +1,67 @@
 import { useEffect, useRef, useState } from "react";
-import "./SongPlayer.css"; // Importing the CSS for styling
+import "./SongPlayer.css";
 
-const SongPlayer = ({ songId, songTitle }) => {
+const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
   const [audioSrc, setAudioSrc] = useState(null);
   const [error, setError] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false); // State to manage play/pause
-  const [progress, setProgress] = useState(0); // State for progress bar
-  const [coverImage, setCoverImage] = useState(null); // State for the cover image
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [coverImage, setCoverImage] = useState(null);
   const audioRef = useRef(null);
 
   useEffect(() => {
-    if (!songId) return;
+    if (!song) return;
 
     const fetchSong = async () => {
       try {
-        setError(null); // Reset error before starting new fetch
-
+        setError(null);
         if (audioRef.current) {
-          audioRef.current.pause(); // Stop any currently playing audio
-          audioRef.current.currentTime = 0; // Reset time to start
-          setIsPlaying(false); // Ensure the state reflects that it's stopped
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+          setIsPlaying(false);
         }
 
-        // Fetch the song file
         const response = await fetch(
-          `${process.env.REACT_APP_SONG_API_BASE}/get-song/${songId}`
+          `${process.env.REACT_APP_SONG_API_BASE}/get-song/${song.id}`
         );
         if (!response.ok) {
-          throw new Error(`Failed to fetch song: ${response.statusText}`);
+          throw new Error("Failed to fetch song: " + response.statusText);
         }
 
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        setAudioSrc(url); // Set the audio source URL
+        setAudioSrc(url);
       } catch (err) {
         setError("Could not load the song. Please try again.");
-        console.error(err); // Log the actual error
+        console.error(err);
       }
     };
 
     const fetchCoverImage = async () => {
       try {
-        // Reset cover image state before fetching
         setCoverImage(null);
 
-        // Fetch the cover image
         const coverResponse = await fetch(
-          `${process.env.REACT_APP_SONG_API_BASE}/get-song-cover-image/${songId}`
+          `${process.env.REACT_APP_SONG_API_BASE}/get-song-cover-image/${song.id}`
         );
         if (!coverResponse.ok) {
           throw new Error(
-            `Failed to fetch cover image: ${coverResponse.statusText}`
+            "Failed to fetch cover image: " + coverResponse.statusText
           );
         }
 
         const blob = await coverResponse.blob();
         const coverUrl = URL.createObjectURL(blob);
-        setCoverImage(coverUrl); // Set the cover image URL
+        setCoverImage(coverUrl);
       } catch (err) {
         setError("Could not load the cover image. Please try again.");
-        console.error(err); // Log the actual error
+        console.error(err);
       }
     };
 
-    // Fetch song and cover image when songId changes
     fetchSong();
     fetchCoverImage();
 
-    // Cleanup the blob URLs to prevent memory leaks
     return () => {
       if (audioSrc) {
         URL.revokeObjectURL(audioSrc);
@@ -76,40 +70,36 @@ const SongPlayer = ({ songId, songTitle }) => {
         URL.revokeObjectURL(coverImage);
       }
     };
-  }, [songId]); // Depend on `songId` to refetch both song and cover image when it changes
+  }, [song]);
 
-  // Automatically play the song once the audioSrc is available and isPlaying is true
   useEffect(() => {
     if (audioRef.current && audioSrc) {
       if (isPlaying) {
-        const playPromise = audioRef.current.play(); // Attempt to play the audio
+        const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
           playPromise
             .then(() => {
-              // Play started successfully
               console.log("Playback started.");
             })
             .catch((error) => {
-              // Handle error if playback is prevented (e.g., autoplay restrictions)
               setError("Could not autoplay the song. Please try manually.");
               console.error(error);
             });
         }
       } else {
-        audioRef.current.pause(); // Pause when `isPlaying` is false
+        audioRef.current.pause();
       }
     }
-  }, [audioSrc, isPlaying]); // Trigger this effect when audioSrc or isPlaying changes
+  }, [audioSrc, isPlaying]);
 
-  // Automatically play the song when a new song is loaded
   useEffect(() => {
     if (audioRef.current && audioSrc && !isPlaying) {
-      setIsPlaying(true); // Start playing the song automatically when the audioSrc is set
+      setIsPlaying(true);
     }
-  }, [audioSrc]); // This effect runs once audioSrc is set
+  }, [audioSrc]);
 
   const togglePlayPause = () => {
-    setIsPlaying((prev) => !prev); // Toggle the play/pause state
+    setIsPlaying((prev) => !prev);
   };
 
   const handleTimeUpdate = () => {
@@ -121,57 +111,66 @@ const SongPlayer = ({ songId, songTitle }) => {
   };
 
   return (
-    <div className="player-container">
-      {audioSrc && coverImage && (
-        <div className="player">
-          {/* Song Title */}
-          <div className="song-title">{songTitle}</div>
+    <div
+      className={`player-container ${isMinimized ? "minimized" : "expanded"}`}
+    >
+      {/* Minimized version (horizontal strip) */}
+      {isMinimized && (
+        <div className="minimized-strip" onClick={() => setIsMinimized(false)}>
+          <img src={coverImage} alt="Song Cover" className="cover-small" />
+          <span className="song-title-small">{song.originalName}</span>
+        </div>
+      )}
 
-          {/* Song Cover */}
-          <div className="cover-container">
-            <img src={coverImage} alt="Song Cover" className="cover-image" />
-          </div>
+      {/* Full player view */}
+      {!isMinimized && (
+        <>
+          <button className="minimize-btn" onClick={() => setIsMinimized(true)}>
+            Minimize
+          </button>
+          <div className="player">
+            <div className="header">
+              <div className="song-title">{song.originalName}</div>
+            </div>
 
-          {/* Progress Bar */}
-          <div className="progress-bar-container">
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={progress}
-              onChange={(e) => {
-                if (audioRef.current) {
-                  const duration = audioRef.current.duration;
-                  audioRef.current.currentTime =
-                    (e.target.value / 100) * duration;
-                }
-              }}
-              className="progress-bar"
+            <div className="cover-container">
+              <img src={coverImage} alt="Song Cover" className="cover-image" />
+            </div>
+
+            <div className="progress-bar-container">
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={progress}
+                onChange={(e) => {
+                  if (audioRef.current) {
+                    const duration = audioRef.current.duration;
+                    audioRef.current.currentTime =
+                      (e.target.value / 100) * duration;
+                  }
+                }}
+                className="progress-bar"
+              />
+            </div>
+
+            <div className="play-pause-btn-container">
+              <button
+                className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
+                onClick={togglePlayPause}
+              >
+                {isPlaying ? "▶" : "⏸"}
+              </button>
+            </div>
+
+            <audio
+              ref={audioRef}
+              src={audioSrc}
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={() => setIsPlaying(false)}
             />
           </div>
-
-          {/* Play/Pause Button */}
-          <div className="play-pause-btn-container">
-            <button
-              className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
-              onClick={togglePlayPause}
-            >
-              {isPlaying ? (
-                <i className="fa fa-pause" aria-hidden="true"></i>
-              ) : (
-                <i className="fa fa-play" aria-hidden="true"></i>
-              )}
-            </button>
-          </div>
-
-          {/* Audio Element */}
-          <audio
-            ref={audioRef}
-            src={audioSrc}
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={() => setIsPlaying(false)}
-          />
-        </div>
+        </>
       )}
     </div>
   );

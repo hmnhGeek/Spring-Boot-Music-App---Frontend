@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import SongPlayer from "./SongPlayer";
-import "./App.css"; // Make sure to import the CSS file
+import "./App.css";
 
 const App = () => {
   const [songsList, setSongsList] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
     axios
@@ -16,15 +17,20 @@ const App = () => {
       .catch((error) => console.log(error));
   }, []);
 
+  const handleSongClick = (song) => {
+    setSelectedSong(song);
+    setIsMinimized(false); // Reset minimize when a new song is clicked
+  };
+
   return (
     <div className="app-container">
-      {/* Left section for song list */}
-      <div className={`left-section ${selectedSong ? "with-player" : ""}`}>
+      {/* Song List */}
+      <div className="song-list">
         <ul>
           {songsList.map((x) => (
             <li
               key={x.id}
-              onClick={() => setSelectedSong(x)} // Update selected song on click
+              onClick={() => handleSongClick(x)} // Update selected song on click
               style={{
                 cursor: "pointer",
                 padding: "10px",
@@ -38,14 +44,13 @@ const App = () => {
         </ul>
       </div>
 
-      {/* Right section for the player */}
+      {/* Song Player */}
       {selectedSong && (
-        <div className="right-section">
-          <SongPlayer
-            songId={selectedSong.id}
-            songTitle={selectedSong.originalName}
-          />
-        </div>
+        <SongPlayer
+          song={selectedSong}
+          isMinimized={isMinimized}
+          setIsMinimized={setIsMinimized}
+        />
       )}
     </div>
   );
