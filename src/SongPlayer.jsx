@@ -19,6 +19,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
           audioRef.current.pause();
           audioRef.current.currentTime = 0;
           setIsPlaying(false);
+          setProgress(0); // Reset progress when a new song is loaded
         }
 
         const response = await fetch(
@@ -99,6 +100,11 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
   }, [audioSrc]);
 
   const togglePlayPause = () => {
+    if (isPlaying) {
+      // Save the current position before pausing
+      const currentTime = audioRef.current.currentTime;
+      setProgress((currentTime / audioRef.current.duration) * 100);
+    }
     setIsPlaying((prev) => !prev);
   };
 
@@ -125,7 +131,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
               className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
               onClick={togglePlayPause}
             >
-              {isPlaying ? "Play" : "Pause"}
+              {isPlaying ? "Pause" : "Play"}
             </button>
           </div>
           <div className="progress-bar-container">
@@ -144,13 +150,6 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
               className="progress-bar"
             />
           </div>
-
-          <audio
-            ref={audioRef}
-            src={audioSrc}
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={() => setIsPlaying(false)}
-          />
         </div>
       )}
 
@@ -191,19 +190,19 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
                 className={`play-pause-btn ${isPlaying ? "playing" : ""}`}
                 onClick={togglePlayPause}
               >
-                {isPlaying ? "Play" : "Pause"}
+                {isPlaying ? "Pause" : "Play"}
               </button>
             </div>
-
-            <audio
-              ref={audioRef}
-              src={audioSrc}
-              onTimeUpdate={handleTimeUpdate}
-              onEnded={() => setIsPlaying(false)}
-            />
           </div>
         </>
       )}
+      {/* Always render audio element */}
+      <audio
+        ref={audioRef}
+        src={audioSrc}
+        onTimeUpdate={handleTimeUpdate}
+        onEnded={() => setIsPlaying(false)}
+      />
     </div>
   );
 };
