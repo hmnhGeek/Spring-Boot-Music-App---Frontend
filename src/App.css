@@ -40,7 +40,7 @@ li {
 
 .app-container {
   height: 100vh;
-  overflow: hidden; /* Prevents any overflow and removes vertical scrollbar */
+  overflow-y: auto; /* Enable scroll when content exceeds height */
 }
 
 /* Song Card Container */
@@ -62,6 +62,7 @@ li {
   overflow: hidden;
   position: relative;
   transition: transform 0.3s;
+  /* margin-bottom: 60px; */
 }
 
 .card-song-title {
