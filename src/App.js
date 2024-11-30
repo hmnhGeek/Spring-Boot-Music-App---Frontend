@@ -1,5 +1,3 @@
-// src/App.js
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import SongPlayer from "./SongPlayer";
@@ -58,24 +56,31 @@ const App = () => {
         onSubmit={refreshSongList}
       />
 
-      {/* Song List */}
+      {/* Song List as Cards */}
       <div className="song-list">
-        <ul>
-          {songsList.map((x) => (
-            <li
-              key={x.id}
-              onClick={() => handleSongClick(x)} // Update selected song on click
-              style={{
-                cursor: "pointer",
-                padding: "10px",
-                background:
-                  selectedSong?.id === x.id ? "#f0f0f0" : "transparent",
-              }}
+        <div className="song-cards-container">
+          {songsList.map((song) => (
+            <div
+              key={song.id}
+              className={`song-card ${
+                selectedSong?.id === song.id ? "selected" : ""
+              }`}
+              onClick={() => handleSongClick(song)} // Update selected song on click
             >
-              {x.originalName}
-            </li>
+              <div className="song-cover">
+                {/* Check if coverImageData exists and render the image */}
+                {song.coverImageData && (
+                  <img
+                    className="cover-image"
+                    src={`data:image/jpeg;base64,${song.coverImageData}`} // Assuming it's base64 JPEG data
+                    alt={`Cover for ${song.originalName}`}
+                  />
+                )}
+              </div>
+              <div className="card-song-title">{song.originalName}</div>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
 
       {/* Song Player */}
