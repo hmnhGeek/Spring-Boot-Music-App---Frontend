@@ -1,0 +1,28 @@
+.vault-button {
+  background-image: linear-gradient(
+    to right,
+    #ff4e50 0%,
+    #f9d423 51%,
+    #ff4e50 100%
+  );
+}
+.vault-button {
+  margin: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  border: none;
+  padding: 15px 25px;
+  float: right;
+  cursor: pointer;
+}
+
+.vault-button:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}

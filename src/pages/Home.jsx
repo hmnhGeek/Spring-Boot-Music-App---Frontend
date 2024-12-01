@@ -5,6 +5,9 @@ import SongPlayer from "../SongPlayer";
 import UploadModal from "../components/UploadModal/UploadModal";
 import { useNavigate } from "react-router-dom";
 import SongCard from "../components/SongCard/SongCard";
+import "./Home.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
 
 const Home = (props) => {
   const [songsList, setSongsList] = useState([]);
@@ -61,11 +64,8 @@ const Home = (props) => {
         Upload Song
       </button>
 
-      <button
-        className="upload-button"
-        onClick={() => handleNavigate("/vault")}
-      >
-        Vault
+      <button className="vault-button" onClick={() => handleNavigate("/vault")}>
+        <FontAwesomeIcon icon={faLock} /> &nbsp; Vault
       </button>
 
       {/* Upload Modal */}
