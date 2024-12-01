@@ -1,12 +1,13 @@
 import React from "react";
 import "./SongCard.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 const SongCard = ({ song, selectedSong, handleSongClick }) => {
   return (
     <div
       key={song.id}
       className={`song-card ${selectedSong?.id === song.id ? "selected" : ""}`}
-      onClick={() => handleSongClick(song)} // Update selected song on click
     >
       <div className="song-cover">
         {/* Check if coverImageData exists and render the image */}
@@ -18,7 +19,17 @@ const SongCard = ({ song, selectedSong, handleSongClick }) => {
           />
         )}
       </div>
-      <div className="card-song-title">{song.originalName}</div>
+      <div className="card-song-title">
+        {song.originalName.substr(0, 16)}...
+      </div>
+      <div>
+        <button
+          className="card-play-button"
+          onClick={() => handleSongClick(song)}
+        >
+          <FontAwesomeIcon icon={faPlay} /> &nbsp; Play
+        </button>
+      </div>
     </div>
   );
 };
