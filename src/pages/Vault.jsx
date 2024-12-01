@@ -5,6 +5,8 @@ import SongPlayer from "../SongPlayer";
 import UploadModal from "../components/UploadModal/UploadModal";
 import "./Vault.css";
 import SongCard from "../components/SongCard/SongCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 const Vault = (props) => {
   const [songsList, setSongsList] = useState([]);
@@ -14,6 +16,10 @@ const Vault = (props) => {
   const [passwordModalVisible, setPasswordModalVisible] = useState(true);
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
 
   const hardcodedPassword = "4252"; // Replace with your desired password
 
@@ -91,6 +97,10 @@ const Vault = (props) => {
           {/* Button to open upload modal */}
           <button className="upload-button" onClick={openModal}>
             Upload Song
+          </button>
+
+          <button className="vault-button" onClick={() => handleNavigate("/")}>
+            <FontAwesomeIcon icon={faHome} /> &nbsp; Home
           </button>
 
           {/* Upload Modal */}
