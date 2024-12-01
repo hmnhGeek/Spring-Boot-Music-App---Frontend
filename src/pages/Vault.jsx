@@ -4,6 +4,7 @@ import axios from "axios";
 import SongPlayer from "../SongPlayer";
 import UploadModal from "../components/UploadModal/UploadModal";
 import "./Vault.css";
+import SongCard from "../components/SongCard/SongCard";
 
 const Vault = (props) => {
   const [songsList, setSongsList] = useState([]);
@@ -103,25 +104,11 @@ const Vault = (props) => {
           <div className="song-list">
             <div className="song-cards-container">
               {songsList.map((song) => (
-                <div
-                  key={song.id}
-                  className={`song-card ${
-                    selectedSong?.id === song.id ? "selected" : ""
-                  }`}
-                  onClick={() => handleSongClick(song)} // Update selected song on click
-                >
-                  <div className="song-cover">
-                    {/* Check if coverImageData exists and render the image */}
-                    {song.coverImageData && (
-                      <img
-                        className="cover-image"
-                        src={`data:image/jpeg;base64,${song.coverImageData}`} // Assuming it's base64 JPEG data
-                        alt={`Cover for ${song.originalName}`}
-                      />
-                    )}
-                  </div>
-                  <div className="card-song-title">{song.originalName}</div>
-                </div>
+                <SongCard
+                  song={song}
+                  selectedSong={selectedSong}
+                  handleSongClick={handleSongClick}
+                />
               ))}
             </div>
           </div>
