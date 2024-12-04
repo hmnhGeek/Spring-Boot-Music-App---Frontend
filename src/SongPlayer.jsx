@@ -10,6 +10,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
   const [progress, setProgress] = useState(0);
   const [coverImage, setCoverImage] = useState(null);
   const [dominantColor, setDominantColor] = useState(null); // Store the dominant color
+  const [textColor, setTextColor] = useState(null); // Store the text color
   const audioRef = useRef(null);
 
   // Function to get the dominant color from an image using canvas
@@ -102,6 +103,10 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
         // Extract the dominant color from the cover image
         const dominantColor = await getDominantColor(coverUrl);
         setDominantColor(dominantColor);
+
+        // Calculate and set the text color
+        const calculatedTextColor = calculateTextColor(dominantColor);
+        setTextColor(calculatedTextColor);
       } catch (err) {
         setError("Could not load the cover image. Please try again.");
         console.error(err);
@@ -120,6 +125,15 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
       }
     };
   }, [song]);
+
+  const calculateTextColor = (rgb) => {
+    const [r, g, b] = rgb
+      .match(/\d+/g)
+      .map(Number)
+      .map((v) => v / 255); // Normalize to 0–1
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return luminance > 0.5 ? "#000" : "#fff"; // Black text for light background, white for dark
+  };
 
   useEffect(() => {
     if (audioRef.current && audioSrc) {
@@ -169,6 +183,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
       className={`player-container ${isMinimized ? "minimized" : "expanded"}`}
       style={{
         backgroundColor: dominantColor, // Set the background color dynamically
+        color: textColor,
       }}
     >
       {/* Minimized version (horizontal strip) */}
@@ -183,6 +198,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
           <span
             className="song-title-small"
             onClick={() => setIsMinimized(false)}
+            style={{ color: textColor }}
           >
             {song.originalName}
           </span>
@@ -190,7 +206,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
           <div className="play-pause-btn-container">
             <button
               onClick={togglePlayPause}
-              style={{ backgroundColor: dominantColor }}
+              style={{ backgroundColor: dominantColor, color: textColor }}
               className="play-pause-btn"
             >
               <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
@@ -222,6 +238,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
             <button
               className="minimize-btn"
               onClick={() => setIsMinimized(true)}
+              style={{ color: textColor }}
             >
               <FontAwesomeIcon icon={faMinimize} />
             </button>
@@ -256,7 +273,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
               <button
                 onClick={togglePlayPause}
                 className="play-pause-btn"
-                style={{ backgroundColor: dominantColor }}
+                style={{ backgroundColor: dominantColor, color: textColor }}
               >
                 <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
               </button>
