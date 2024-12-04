@@ -137,23 +137,33 @@ const Vault = (props) => {
             onSubmit={refreshSongList}
           />
 
-          {/* Song List as Cards */}
-          <div className="song-list">
-            <div className="song-cards-container">
-              {songsList.length > 0 ? (
-                songsList.map((song) => (
-                  <SongCard
-                    key={song.id}
-                    song={song}
-                    selectedSong={selectedSong}
-                    handleSongClick={handleSongClick}
-                  />
-                ))
-              ) : (
-                <p>No songs available</p> // Fallback when the list is empty
-              )}
+          {(isPageSwitching || isLoading) && (
+            <div className="bouncing-balls-container">
+              <div className="bouncing-ball"></div>
+              <div className="bouncing-ball"></div>
+              <div className="bouncing-ball"></div>
             </div>
-          </div>
+          )}
+
+          {/* Song List as Cards */}
+          {!isPageSwitching && !isLoading && (
+            <div className="song-list">
+              <div className="song-cards-container">
+                {songsList.length > 0 ? (
+                  songsList.map((song) => (
+                    <SongCard
+                      key={song.id}
+                      song={song}
+                      selectedSong={selectedSong}
+                      handleSongClick={handleSongClick}
+                    />
+                  ))
+                ) : (
+                  <p>No songs available</p> // Fallback when the list is empty
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Pagination Controls */}
           {!isLoading && (
