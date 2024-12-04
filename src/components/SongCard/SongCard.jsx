@@ -1,9 +1,21 @@
 import React from "react";
 import "./SongCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDeleteLeft,
+  faPlay,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
-const SongCard = ({ song, selectedSong, handleSongClick }) => {
+const SongCard = ({ song, selectedSong, handleSongClick, refresh }) => {
+  const handleSongDelete = () => {
+    axios
+      .delete(`${process.env.REACT_APP_SONG_API_BASE}/${song.id}`)
+      .then((response) => refresh())
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div
       key={song.id}
@@ -22,7 +34,13 @@ const SongCard = ({ song, selectedSong, handleSongClick }) => {
       <div className="card-song-title">
         {song.originalName.substr(0, 16)}...
       </div>
-      <div>
+      <div style={{ display: "flow" }}>
+        <button
+          className="card-delete-button"
+          onClick={() => handleSongDelete(song)}
+        >
+          <FontAwesomeIcon icon={faTrash} />
+        </button>
         <button
           className="card-play-button"
           onClick={() => handleSongClick(song)}

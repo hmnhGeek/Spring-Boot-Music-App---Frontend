@@ -156,6 +156,7 @@ const Vault = (props) => {
                       song={song}
                       selectedSong={selectedSong}
                       handleSongClick={handleSongClick}
+                      refresh={refreshSongList}
                     />
                   ))
                 ) : (
