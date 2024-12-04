@@ -6,7 +6,11 @@ import UploadModal from "../components/UploadModal/UploadModal";
 import "./Vault.css";
 import SongCard from "../components/SongCard/SongCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icons
 
 const Vault = (props) => {
   const [songsList, setSongsList] = useState([]);
@@ -15,6 +19,14 @@ const Vault = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(true);
   const [password, setPassword] = useState("");
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(8); // Default page size
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPageSwitching, setIsPageSwitching] = useState(false);
+
   const navigate = useNavigate();
 
   const handleNavigate = (path) => {
@@ -25,16 +37,34 @@ const Vault = (props) => {
 
   useEffect(() => {
     if (!passwordModalVisible) {
-      axios
-        .get(
-          `${process.env.REACT_APP_SONG_API_BASE}/get-song-list?vaultProtected=true`
-        )
-        .then((response) => {
-          setSongsList(response.data);
-        })
-        .catch((error) => console.log(error));
+      setIsLoading(true);
+      fetchSongs(0);
     }
   }, [passwordModalVisible]);
+
+  useEffect(() => {
+    fetchSongs(currentPage); // Fetch songs for the current page
+  }, [currentPage]);
+
+  const fetchSongs = (page) => {
+    setIsPageSwitching(true);
+    axios
+      .get(
+        `${process.env.REACT_APP_SONG_API_BASE}/get-song-list?vaultProtected=true&page=${page}&size=${pageSize}`
+      )
+      .then((response) => {
+        setSongsList(response.data.content || []); // Ensure content is handled gracefully
+        setTotalPages(response.data.totalPages || 0);
+        setCurrentPage(page);
+        setIsLoading(false);
+        setIsPageSwitching(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+        setIsPageSwitching(false);
+      });
+  };
 
   const handleSongClick = (song) => {
     setSelectedSong(song);
@@ -42,15 +72,8 @@ const Vault = (props) => {
   };
 
   const refreshSongList = () => {
-    // Re-fetch the song list after a successful upload
-    axios
-      .get(
-        `${process.env.REACT_APP_SONG_API_BASE}/get-song-list?vaultProtected=true`
-      )
-      .then((response) => {
-        setSongsList(response.data);
-      })
-      .catch((error) => console.log(error));
+    setIsLoading(true);
+    fetchSongs(currentPage); // Re-fetch songs after upload
   };
 
   const openModal = () => {
@@ -68,6 +91,10 @@ const Vault = (props) => {
       alert("Incorrect password. Redirecting to Home.");
       navigate("/"); // Redirect to home page if password is incorrect
     }
+  };
+
+  const handlePageChange = (newPage) => {
+    fetchSongs(newPage);
   };
 
   return (
@@ -113,15 +140,41 @@ const Vault = (props) => {
           {/* Song List as Cards */}
           <div className="song-list">
             <div className="song-cards-container">
-              {songsList.map((song) => (
-                <SongCard
-                  song={song}
-                  selectedSong={selectedSong}
-                  handleSongClick={handleSongClick}
-                />
-              ))}
+              {songsList.length > 0 ? (
+                songsList.map((song) => (
+                  <SongCard
+                    key={song.id}
+                    song={song}
+                    selectedSong={selectedSong}
+                    handleSongClick={handleSongClick}
+                  />
+                ))
+              ) : (
+                <p>No songs available</p> // Fallback when the list is empty
+              )}
             </div>
           </div>
+
+          {/* Pagination Controls */}
+          {!isLoading && (
+            <div className="pagination-container">
+              <button
+                className="pagination-btn prev"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 0}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
+
+              <button
+                className="pagination-btn next"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage + 1 >= totalPages}
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
+          )}
 
           {/* Song Player */}
           {selectedSong && (

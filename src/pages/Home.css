@@ -26,3 +26,68 @@
   color: #fff;
   text-decoration: none;
 }
+
+/* Home.css */
+.home-page {
+  position: relative;
+}
+
+/* Pagination Container */
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+/* Pagination Buttons (Previous and Next) */
+.pagination-btn {
+  background-image: linear-gradient(
+    to right,
+    #314755 0%,
+    #26a0da 51%,
+    #314755 100%
+  );
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 0 10px #eee;
+  transition: 0.5s;
+  background-size: 200% auto;
+}
+
+.pagination-btn:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.pagination-btn:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Positioning for Previous and Next Buttons */
+.pagination-btn.prev {
+  position: absolute;
+  left: 10px;
+}
+
+.pagination-btn.next {
+  position: absolute;
+  right: 10px;
+}
+
+/* Pagination Text */
+.pagination-text {
+  font-size: 1.2rem;
+  margin: 0 10px;
+  color: #333;
+}
