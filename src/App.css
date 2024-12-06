@@ -29,6 +29,14 @@
   cursor: pointer;
 }
 
+.action-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Spacing between buttons and typeahead */
+  margin-bottom: 20px; /* Space below the action bar */
+}
+
 .upload-button:hover {
   background-position: right center; /* change the direction of the change here */
   color: #fff;

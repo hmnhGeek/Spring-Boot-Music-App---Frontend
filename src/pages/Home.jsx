@@ -11,12 +11,14 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icons
+import CustomTypeahead from "../components/CustomTypeahead/CustomTypeahead";
 
 const Home = (props) => {
   const [songsList, setSongsList] = useState([]); // Ensure songsList is always initialized as an array
   const [selectedSong, setSelectedSong] = useState(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [allAvailableSongs, setAllAvailableSongs] = useState([]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
@@ -29,6 +31,11 @@ const Home = (props) => {
 
   const handleNavigate = (path) => {
     navigate(path);
+  };
+
+  const handleTypeaheadSelect = (selected) => {
+    const song = allAvailableSongs.find((x) => x.originalName === selected);
+    if (song) handleSongClick(song);
   };
 
   const fetchSongs = (page) => {
@@ -54,6 +61,7 @@ const Home = (props) => {
   useEffect(() => {
     setIsLoading(true);
     fetchSongs(0); // Load first page initially
+    fetchTypeaheadList();
   }, []);
 
   const handleSongClick = (song) => {
@@ -78,83 +86,99 @@ const Home = (props) => {
     fetchSongs(newPage);
   };
 
+  const fetchTypeaheadList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SONG_API_BASE}/get-song-list-lite?vaultProtected=false`
+      )
+      .then((response) => setAllAvailableSongs(response.data))
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <div className="home-page">
-      {/* Button to open modal */}
-      <button className="upload-button" onClick={openModal}>
-        Upload Song
-      </button>
-
-      <button className="vault-button" onClick={() => handleNavigate("/vault")}>
-        <FontAwesomeIcon icon={faLock} /> &nbsp; Vault
-      </button>
-
-      {/* Upload Modal */}
-      <UploadModal
-        isVisible={isModalVisible}
-        onClose={closeModal}
-        onSubmit={refreshSongList}
-      />
-
-      {(isPageSwitching || isLoading) && (
-        <div className="bouncing-balls-container">
-          <div className="bouncing-ball"></div>
-          <div className="bouncing-ball"></div>
-          <div className="bouncing-ball"></div>
-        </div>
-      )}
-
-      {/* Song List as Cards */}
-      {!isPageSwitching && !isLoading && (
-        <div className="song-list">
-          <div className="song-cards-container">
-            {songsList.length > 0 ? (
-              songsList.map((song) => (
-                <SongCard
-                  key={song.id}
-                  song={song}
-                  selectedSong={selectedSong}
-                  handleSongClick={handleSongClick}
-                  refresh={refreshSongList}
-                />
-              ))
-            ) : (
-              <p>No songs available</p> // Fallback when the list is empty
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Pagination Controls */}
-      {!isLoading && (
-        <div className="pagination-container">
-          <button
-            className="pagination-btn prev"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 0}
-          >
-            <FontAwesomeIcon icon={faChevronLeft} />
+    <>
+      <div className="home-page">
+        <div className="action-bar">
+          <button className="upload-button" onClick={openModal}>
+            Upload Song
           </button>
 
+          <CustomTypeahead
+            options={allAvailableSongs.map((i) => i.originalName)}
+            onSelect={handleTypeaheadSelect}
+            placeholder="Find a song..."
+          />
           <button
-            className="pagination-btn next"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage + 1 >= totalPages}
+            className="vault-button"
+            onClick={() => handleNavigate("/vault")}
           >
-            <FontAwesomeIcon icon={faChevronRight} />
+            <FontAwesomeIcon icon={faLock} /> &nbsp; Vault
           </button>
         </div>
-      )}
-
-      {/* Song Player */}
-      {selectedSong && (
-        <SongPlayer
-          song={selectedSong}
-          isMinimized={isMinimized}
-          setIsMinimized={setIsMinimized}
+        {/* Button to open modal */}
+        {/* Upload Modal */}
+        <UploadModal
+          isVisible={isModalVisible}
+          onClose={closeModal}
+          onSubmit={refreshSongList}
         />
-      )}
-    </div>
+        {(isPageSwitching || isLoading) && (
+          <div className="bouncing-balls-container">
+            <div className="bouncing-ball"></div>
+            <div className="bouncing-ball"></div>
+            <div className="bouncing-ball"></div>
+          </div>
+        )}
+        {/* Song List as Cards */}
+        {!isPageSwitching && !isLoading && (
+          <div className="song-list">
+            <div className="song-cards-container">
+              {songsList.length > 0 ? (
+                songsList.map((song) => (
+                  <SongCard
+                    key={song.id}
+                    song={song}
+                    selectedSong={selectedSong}
+                    handleSongClick={handleSongClick}
+                    refresh={refreshSongList}
+                  />
+                ))
+              ) : (
+                <p>No songs available</p> // Fallback when the list is empty
+              )}
+            </div>
+          </div>
+        )}
+        {/* Pagination Controls */}
+        {!isLoading && (
+          <div className="pagination-container">
+            <button
+              className="pagination-btn prev"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 0}
+            >
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
+
+            <button
+              className="pagination-btn next"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage + 1 >= totalPages}
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </button>
+          </div>
+        )}
+        {/* Song Player */}
+        {selectedSong && (
+          <SongPlayer
+            song={selectedSong}
+            isMinimized={isMinimized}
+            setIsMinimized={setIsMinimized}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

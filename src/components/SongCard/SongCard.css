@@ -4,6 +4,9 @@
   flex-wrap: wrap;
   gap: 40px;
   justify-content: center;
+  margin-left: 180px;
+  margin-right: 180px;
+  margin-bottom: 150px;
 }
 
 /* Individual song card */
