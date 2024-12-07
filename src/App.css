@@ -29,6 +29,36 @@
   cursor: pointer;
 }
 
+.random-song-button {
+  background-image: linear-gradient(
+    to right,
+    #aa076b 0%,
+    #61045f 51%,
+    #aa076b 100%
+  );
+}
+.random-song-button {
+  margin: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  border: none;
+  padding: 15px 25px;
+  float: left;
+  display: block;
+  cursor: pointer;
+}
+
+.random-song-button:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
 .action-bar {
   display: flex;
   justify-content: center;

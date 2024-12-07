@@ -10,6 +10,7 @@ import {
   faHome,
   faChevronLeft,
   faChevronRight,
+  faGift,
 } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icons
 import CustomTypeahead from "../components/CustomTypeahead/CustomTypeahead";
 
@@ -150,6 +151,15 @@ const Vault = (props) => {
     fetchSongs(newPage);
   };
 
+  const playRandomSong = () => {
+    const allSongs = songsList;
+    if (allSongs.length > 0) {
+      const randomIndex = Math.floor(Math.random() * allSongs.length);
+      setSelectedSong(allSongs[randomIndex]);
+      setIsMinimized(false); // Ensure player is not minimized
+    }
+  };
+
   const fetchTypeaheadList = () => {
     axios
       .get(
@@ -189,13 +199,15 @@ const Vault = (props) => {
               <button className="upload-button" onClick={openModal}>
                 Upload Song
               </button>
-
               <CustomTypeahead
                 options={allAvailableSongs.map((i) => i.originalName)}
                 onSelect={handleTypeaheadSelect}
                 onClear={() => setFilteredSong([])}
                 placeholder="Find a song..."
               />
+              <button className="random-song-button" onClick={playRandomSong}>
+                <FontAwesomeIcon icon={faGift} /> &nbsp; Surprise Me!
+              </button>
               <button
                 className="vault-button"
                 onClick={() => handleNavigate("/")}
@@ -275,6 +287,7 @@ const Vault = (props) => {
                 song={selectedSong}
                 isMinimized={isMinimized}
                 setIsMinimized={setIsMinimized}
+                onSongEnd={playRandomSong}
               />
             )}
           </>

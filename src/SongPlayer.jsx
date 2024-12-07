@@ -3,7 +3,7 @@ import "./SongPlayer.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause, faMinimize } from "@fortawesome/free-solid-svg-icons";
 
-const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
+const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
   const [audioSrc, setAudioSrc] = useState(null);
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -286,7 +286,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized }) => {
         ref={audioRef}
         src={audioSrc}
         onTimeUpdate={handleTimeUpdate}
-        onEnded={() => setIsPlaying(false)}
+        onEnded={onSongEnd}
       />
     </div>
   );
