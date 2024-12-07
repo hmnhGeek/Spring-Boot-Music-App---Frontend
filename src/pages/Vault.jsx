@@ -28,6 +28,7 @@ const Vault = (props) => {
   const [pageSize, setPageSize] = useState(8); // Default page size
   const [isLoading, setIsLoading] = useState(false);
   const [isPageSwitching, setIsPageSwitching] = useState(false);
+  const [filteredSong, setFilteredSong] = useState([]);
 
   const navigate = useNavigate();
 
@@ -51,7 +52,7 @@ const Vault = (props) => {
 
   const handleTypeaheadSelect = (selected) => {
     const song = allAvailableSongs.find((x) => x.originalName === selected);
-    if (song) handleSongClick(song);
+    if (song) fetchCoverImage(song);
   };
 
   const fetchSongs = (page) => {
@@ -82,6 +83,8 @@ const Vault = (props) => {
   const refreshSongList = () => {
     setIsLoading(true);
     fetchSongs(currentPage); // Re-fetch songs after upload
+    fetchTypeaheadList();
+    setFilteredSong([]);
   };
 
   const openModal = () => {
@@ -99,6 +102,48 @@ const Vault = (props) => {
       alert("Incorrect password. Redirecting to Home.");
       navigate("/"); // Redirect to home page if password is incorrect
     }
+  };
+
+  const fetchCoverImage = async (song) => {
+    try {
+      const coverResponse = await fetch(
+        `${process.env.REACT_APP_SONG_API_BASE}/get-song-cover-image/${song.id}`
+      );
+
+      if (!coverResponse.ok) {
+        throw new Error(
+          `Failed to fetch cover image: ${coverResponse.statusText}`
+        );
+      }
+
+      const blob = await coverResponse.blob(); // Convert response to Blob
+      const base64Image = await convertBlobToBase64(blob); // Convert Blob to base64
+
+      // Remove the data:image/jpeg;base64, part if it's included in the base64 string
+      const rawBase64Image = base64Image.split(",")[1]; // Get only the base64 part
+
+      song.coverImageData = rawBase64Image; // Assign raw base64 image data without the prefix
+
+      // Update filteredSong with the song and the base64 image (raw base64)
+      setFilteredSong([
+        {
+          ...song,
+          coverImageData: rawBase64Image, // Attach only the raw base64 image data
+        },
+      ]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Helper function to convert Blob to Base64
+  const convertBlobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result); // reader.result is a Base64 string
+      reader.onerror = reject;
+      reader.readAsDataURL(blob); // This converts the blob to Base64
+    });
   };
 
   const handlePageChange = (newPage) => {
@@ -148,6 +193,7 @@ const Vault = (props) => {
               <CustomTypeahead
                 options={allAvailableSongs.map((i) => i.originalName)}
                 onSelect={handleTypeaheadSelect}
+                onClear={() => setFilteredSong([])}
                 placeholder="Find a song..."
               />
               <button
@@ -177,7 +223,15 @@ const Vault = (props) => {
             {!isPageSwitching && !isLoading && (
               <div className="song-list">
                 <div className="song-cards-container">
-                  {songsList.length > 0 ? (
+                  {filteredSong.length > 0 ? (
+                    <SongCard
+                      key={filteredSong[0].id}
+                      song={filteredSong[0]}
+                      selectedSong={selectedSong}
+                      handleSongClick={handleSongClick}
+                      refresh={refreshSongList}
+                    />
+                  ) : songsList.length > 0 ? (
                     songsList.map((song) => (
                       <SongCard
                         key={song.id}

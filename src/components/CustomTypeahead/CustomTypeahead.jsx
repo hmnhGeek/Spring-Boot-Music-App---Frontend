@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./CustomTypeahead.css";
 
-const CustomTypeahead = ({ options, onSelect, placeholder }) => {
+const CustomTypeahead = ({ options, onSelect, placeholder, onClear }) => {
   const [query, setQuery] = useState("");
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -13,6 +13,7 @@ const CustomTypeahead = ({ options, onSelect, placeholder }) => {
     if (!value.trim()) {
       setFilteredOptions([]);
       setIsDropdownVisible(false);
+      if (onClear) onClear(); // Call onClear when input is cleared
       return;
     }
 
