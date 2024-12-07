@@ -1,19 +1,22 @@
 import React from "react";
 import "./SongCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faDeleteLeft,
-  faPlay,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 const SongCard = ({ song, selectedSong, handleSongClick, refresh }) => {
   const handleSongDelete = () => {
-    axios
-      .delete(`${process.env.REACT_APP_SONG_API_BASE}/${song.id}`)
-      .then((response) => refresh())
-      .catch((err) => console.log(err));
+    // Show a confirmation popup
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${song.originalName}"?`
+    );
+
+    if (confirmDelete) {
+      axios
+        .delete(`${process.env.REACT_APP_SONG_API_BASE}/${song.id}`)
+        .then(() => refresh())
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -22,11 +25,10 @@ const SongCard = ({ song, selectedSong, handleSongClick, refresh }) => {
       className={`song-card ${selectedSong?.id === song.id ? "selected" : ""}`}
     >
       <div className="song-cover">
-        {/* Check if coverImageData exists and render the image */}
         {song.coverImageData && (
           <img
             className="cover-image"
-            src={`data:image/jpeg;base64,${song.coverImageData}`} // Assuming it's base64 JPEG data
+            src={`data:image/jpeg;base64,${song.coverImageData}`}
             alt={`Cover for ${song.originalName}`}
           />
         )}
@@ -35,10 +37,7 @@ const SongCard = ({ song, selectedSong, handleSongClick, refresh }) => {
         {song.originalName.substr(0, 16)}...
       </div>
       <div style={{ display: "flow" }}>
-        <button
-          className="card-delete-button"
-          onClick={() => handleSongDelete(song)}
-        >
+        <button className="card-delete-button" onClick={handleSongDelete}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
         <button
