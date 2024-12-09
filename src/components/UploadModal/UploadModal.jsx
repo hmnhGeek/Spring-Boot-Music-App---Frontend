@@ -47,7 +47,7 @@ const UploadModal = ({ isVisible, onClose, onSubmit }) => {
   return (
     isVisible && (
       <div className="modal-overlay">
-        <div className="modal-content">
+        <div className="upload-modal-content">
           <h2>Upload Song</h2>
           <div className="form-group">
             <label>Song File (MP3):</label>
@@ -58,7 +58,7 @@ const UploadModal = ({ isVisible, onClose, onSubmit }) => {
             />
           </div>
           <div className="form-group">
-            <label>Cover Image (PNG):</label>
+            <label>Cover Image:</label>
             <input
               type="file"
               onChange={handleCoverImageChange}

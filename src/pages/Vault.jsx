@@ -11,6 +11,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faGift,
+  faUpload,
 } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icons
 import CustomTypeahead from "../components/CustomTypeahead/CustomTypeahead";
 
@@ -197,7 +198,7 @@ const Vault = (props) => {
             <div className="action-bar">
               {/* Button to open upload modal */}
               <button className="upload-button" onClick={openModal}>
-                Upload Song
+                <FontAwesomeIcon icon={faUpload} /> &nbsp; Upload Song
               </button>
               <CustomTypeahead
                 options={allAvailableSongs.map((i) => i.originalName)}
