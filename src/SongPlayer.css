@@ -74,6 +74,12 @@
   width: 80%;
 }
 
+.time-label {
+  font-size: 0.9rem;
+  color: inherit;
+  margin: 5px;
+}
+
 .play-pause-btn-container {
   margin: 30px 0;
   text-align: center;

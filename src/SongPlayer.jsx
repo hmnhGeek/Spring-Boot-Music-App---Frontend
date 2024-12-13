@@ -9,6 +9,8 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [coverImage, setCoverImage] = useState(null);
+  const [currentTime, setCurrentTime] = useState(0); // New state for current time
+  const [duration, setDuration] = useState(0); // New state for duration
   const [dominantColor, setDominantColor] = useState(null); // Store the dominant color
   const [textColor, setTextColor] = useState(null); // Store the text color
   const audioRef = useRef(null);
@@ -170,11 +172,20 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
     setIsPlaying((prev) => !prev);
   };
 
+  const formatTime = (seconds) => {
+    if (isNaN(seconds)) return "0:00";
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
   const handleTimeUpdate = () => {
     if (audioRef.current) {
-      const currentTime = audioRef.current.currentTime;
-      const duration = audioRef.current.duration;
-      setProgress((currentTime / duration) * 100);
+      setCurrentTime(audioRef.current.currentTime);
+      setDuration(audioRef.current.duration);
+      setProgress(
+        (audioRef.current.currentTime / audioRef.current.duration) * 100
+      );
     }
   };
 
@@ -213,6 +224,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
             </button>
           </div>
           <div className="progress-bar-container">
+            <span className="time-label">{formatTime(currentTime)}</span>
             <input
               type="range"
               min="0"
@@ -227,6 +239,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
               }}
               className="progress-bar"
             />
+            <span className="time-label">{formatTime(duration)}</span>
           </div>
         </div>
       )}
@@ -253,6 +266,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
             </div>
 
             <div className="progress-bar-container">
+              <span className="time-label">{formatTime(currentTime)}</span>
               <input
                 type="range"
                 min="0"
@@ -267,6 +281,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
                 }}
                 className="progress-bar"
               />
+              <span className="time-label">{formatTime(duration)}</span>
             </div>
 
             <div className="play-pause-btn-container">
