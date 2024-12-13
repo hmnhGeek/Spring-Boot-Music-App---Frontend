@@ -172,6 +172,21 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
     setIsPlaying((prev) => !prev);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        togglePlayPause();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [togglePlayPause]);
+
   const formatTime = (seconds) => {
     if (isNaN(seconds)) return "0:00";
     const minutes = Math.floor(seconds / 60);
