@@ -133,7 +133,7 @@ const Vault = (props) => {
   const fetchCoverImage = async (song) => {
     try {
       const coverResponse = await fetch(
-        `${process.env.REACT_APP_SONG_API_BASE}/get-song-cover-image/${song.id}`
+        `${process.env.REACT_APP_SONG_API_BASE}/get-song-cover-image/${song.id}?password=${sessionPassword}`
       );
 
       if (!coverResponse.ok) {
@@ -313,6 +313,7 @@ const Vault = (props) => {
                 isMinimized={isMinimized}
                 setIsMinimized={setIsMinimized}
                 onSongEnd={playRandomSong}
+                sessionPassword={sessionPassword}
               />
             )}
           </>

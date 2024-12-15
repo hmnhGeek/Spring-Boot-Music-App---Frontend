@@ -3,7 +3,13 @@ import "./SongPlayer.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause, faMinimize } from "@fortawesome/free-solid-svg-icons";
 
-const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
+const SongPlayer = ({
+  song,
+  isMinimized,
+  setIsMinimized,
+  onSongEnd,
+  sessionPassword,
+}) => {
   const [audioSrc, setAudioSrc] = useState(null);
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -70,7 +76,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
         }
 
         const response = await fetch(
-          `${process.env.REACT_APP_SONG_API_BASE}/get-song/${song.id}`
+          `${process.env.REACT_APP_SONG_API_BASE}/get-song/${song.id}?password=${sessionPassword}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch song: " + response.statusText);
@@ -90,7 +96,7 @@ const SongPlayer = ({ song, isMinimized, setIsMinimized, onSongEnd }) => {
         setCoverImage(null);
 
         const coverResponse = await fetch(
-          `${process.env.REACT_APP_SONG_API_BASE}/get-song-cover-image/${song.id}`
+          `${process.env.REACT_APP_SONG_API_BASE}/get-song-cover-image/${song.id}?password=${sessionPassword}`
         );
         if (!coverResponse.ok) {
           throw new Error(
