@@ -214,9 +214,9 @@ const Vault = (props) => {
                 >
                   Submit
                 </button>
-                &nbsp;
+                &nbsp;&nbsp;&nbsp;
                 <button className="submit-button" onClick={() => navigate("/")}>
-                  Home
+                  <FontAwesomeIcon icon={faHome} /> Home
                 </button>
               </div>
             </div>
