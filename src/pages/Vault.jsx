@@ -38,8 +38,6 @@ const Vault = (props) => {
     navigate(path);
   };
 
-  const hardcodedPassword = "4252"; // Replace with your desired password
-
   useEffect(() => {
     if (!passwordModalVisible) {
       setIsLoading(true);
@@ -97,12 +95,33 @@ const Vault = (props) => {
     setIsModalVisible(false);
   };
 
-  const handlePasswordSubmit = () => {
-    if (password === hardcodedPassword) {
-      setPasswordModalVisible(false); // Hide the password modal
-    } else {
-      alert("Incorrect password. Redirecting to Home.");
-      navigate("/"); // Redirect to home page if password is incorrect
+  // Updated password validation API call with base64 encoding
+  const handlePasswordSubmit = async () => {
+    try {
+      // Base64 encode the password
+      const encodedPassword = btoa(password); // 'btoa' encodes to base64
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_CRED_API}`, // Replace with your actual password validation endpoint
+        { encodedPassword } // Pass the base64-encoded password
+      );
+
+      if (response.status === 200) {
+        // Check if status is 200 (OK)
+        setPasswordModalVisible(false); // Hide the password modal if the password is valid
+      } else {
+        alert("Incorrect password. Redirecting to Home.");
+        navigate("/"); // Redirect to home page if password is incorrect
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        // Handle 401 Unauthorized
+        alert("Incorrect password. Redirecting to Home.");
+        navigate("/"); // Redirect to home page if password is incorrect
+      } else {
+        console.error("Error validating password:", error);
+        alert("An error occurred while validating the password.");
+      }
     }
   };
 
