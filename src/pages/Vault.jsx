@@ -31,6 +31,7 @@ const Vault = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPageSwitching, setIsPageSwitching] = useState(false);
   const [filteredSong, setFilteredSong] = useState([]);
+  const [sessionPassword, setSessionPassword] = useState("");
 
   const navigate = useNavigate();
 
@@ -59,7 +60,7 @@ const Vault = (props) => {
     setIsPageSwitching(true);
     axios
       .get(
-        `${process.env.REACT_APP_SONG_API_BASE}/get-song-list?vaultProtected=true&page=${page}&size=${pageSize}`
+        `${process.env.REACT_APP_SONG_API_BASE}/get-song-list?password=${sessionPassword}&vaultProtected=true&page=${page}&size=${pageSize}`
       )
       .then((response) => {
         setSongsList(response.data.content || []); // Ensure content is handled gracefully
@@ -109,17 +110,21 @@ const Vault = (props) => {
       if (response.status === 200) {
         // Check if status is 200 (OK)
         setPasswordModalVisible(false); // Hide the password modal if the password is valid
+        setSessionPassword(encodedPassword);
       } else {
         alert("Incorrect password. Redirecting to Home.");
+        setSessionPassword("");
         navigate("/"); // Redirect to home page if password is incorrect
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
         // Handle 401 Unauthorized
         alert("Incorrect password. Redirecting to Home.");
+        setSessionPassword("");
         navigate("/"); // Redirect to home page if password is incorrect
       } else {
         console.error("Error validating password:", error);
+        setSessionPassword("");
         alert("An error occurred while validating the password.");
       }
     }
@@ -183,7 +188,7 @@ const Vault = (props) => {
   const fetchTypeaheadList = () => {
     axios
       .get(
-        `${process.env.REACT_APP_SONG_API_BASE}/get-song-list-lite?vaultProtected=true`
+        `${process.env.REACT_APP_SONG_API_BASE}/get-song-list-lite?password=${sessionPassword}&vaultProtected=true`
       )
       .then((response) => setAllAvailableSongs(response.data))
       .catch((err) => console.log(err));
