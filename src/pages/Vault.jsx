@@ -112,16 +112,14 @@ const Vault = (props) => {
         setPasswordModalVisible(false); // Hide the password modal if the password is valid
         setSessionPassword(encodedPassword);
       } else {
-        alert("Incorrect password. Redirecting to Home.");
+        alert("Incorrect password.");
         setSessionPassword("");
-        navigate("/"); // Redirect to home page if password is incorrect
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
         // Handle 401 Unauthorized
-        alert("Incorrect password. Redirecting to Home.");
+        alert("Incorrect password.");
         setSessionPassword("");
-        navigate("/"); // Redirect to home page if password is incorrect
       } else {
         console.error("Error validating password:", error);
         setSessionPassword("");
@@ -209,9 +207,18 @@ const Vault = (props) => {
                 placeholder="Enter password"
                 className="password-input"
               />
-              <button className="submit-button" onClick={handlePasswordSubmit}>
-                Submit
-              </button>
+              <div>
+                <button
+                  className="submit-button"
+                  onClick={handlePasswordSubmit}
+                >
+                  Submit
+                </button>
+                &nbsp;
+                <button className="submit-button" onClick={() => navigate("/")}>
+                  Home
+                </button>
+              </div>
             </div>
           </div>
         )}
