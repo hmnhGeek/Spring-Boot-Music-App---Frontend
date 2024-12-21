@@ -2,6 +2,8 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Vault from "./pages/Vault";
+import OpenPlaylists from "./pages/OpenPlaylists";
+import PlaylistSongs from "./pages/PlaylistSongs";
 
 const App = () => {
   return (
@@ -12,6 +14,12 @@ const App = () => {
         </Routes>
         <Routes>
           <Route path="/vault" element={<Vault />} />
+        </Routes>
+        <Routes>
+          <Route path="/playlists" element={<OpenPlaylists />} />
+        </Routes>
+        <Routes>
+          <Route path="/playlist" element={<PlaylistSongs />} />
         </Routes>
       </div>
     </Router>
