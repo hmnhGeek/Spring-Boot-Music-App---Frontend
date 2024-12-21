@@ -68,9 +68,10 @@ const AddSongToPlaylistModal = ({ onClose, onAddSong, playlistId }) => {
           placeholder="Find a song..."
         />
         <div className="modal-buttons">
-          <button onClick={onClose} className="close-button">
+          <button onClick={onClose} className="add-button">
             Close
           </button>
+          &nbsp;&nbsp;&nbsp;
           <button
             onClick={handleAddSong}
             className="add-button"
