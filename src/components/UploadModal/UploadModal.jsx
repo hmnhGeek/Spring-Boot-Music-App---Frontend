@@ -8,6 +8,7 @@ import "./UploadModal.css";
 const UploadModal = ({ isVisible, onClose, onSubmit }) => {
   const [songFile, setSongFile] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
+  const [isProtected, setIsProtected] = useState(true); // Checkbox default to selected
 
   const handleSongFileChange = (event) => {
     setSongFile(event.target.files[0]);
@@ -15,6 +16,10 @@ const UploadModal = ({ isVisible, onClose, onSubmit }) => {
 
   const handleCoverImageChange = (event) => {
     setCoverImage(event.target.files[0]);
+  };
+
+  const handleCheckboxChange = (event) => {
+    setIsProtected(event.target.checked);
   };
 
   const handleSubmit = () => {
@@ -33,8 +38,22 @@ const UploadModal = ({ isVisible, onClose, onSubmit }) => {
         })
         .then((response) => {
           console.log("Upload successful", response.data);
-          onSubmit(); // Call parent callback to refresh song list
-          onClose(); // Close modal after submission
+
+          const songId = response.data.id;
+
+          // Call API to update protection policy based on checkbox state
+          axios
+            .put(
+              `http://localhost:8080/api/songs/update-protection-policy/${songId}?vaultProtected=${isProtected}`
+            )
+            .then(() => {
+              console.log("Protection policy updated successfully");
+              onSubmit(); // Call parent callback to refresh song list
+              onClose(); // Close modal after submission
+            })
+            .catch((error) => {
+              console.error("Failed to update protection policy", error);
+            });
         })
         .catch((error) => {
           console.error("Upload failed", error);
@@ -64,6 +83,16 @@ const UploadModal = ({ isVisible, onClose, onSubmit }) => {
               onChange={handleCoverImageChange}
               accept="image/png"
             />
+          </div>
+          <div className="form-group">
+            <label>
+              <input
+                type="checkbox"
+                checked={isProtected}
+                onChange={handleCheckboxChange}
+              />
+              Protected
+            </label>
           </div>
           <button className="modal-button" onClick={handleSubmit}>
             Submit
