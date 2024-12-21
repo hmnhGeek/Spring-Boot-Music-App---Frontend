@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./AddPlaylistModal.css"; // Import the CSS for styling the modal
 
-const AddPlaylistModal = ({ isOpen, onClose, onSubmit }) => {
+const AddPlaylistModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  sessionPassword,
+  vaultProtected,
+}) => {
   const [playlistName, setPlaylistName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -26,7 +32,8 @@ const AddPlaylistModal = ({ isOpen, onClose, onSubmit }) => {
           `${process.env.REACT_APP_PLAYLIST_API_BASE}/create-playlist`,
           {
             playlistName: playlistName,
-            isProtected: false, // Hardcoded as per the requirement
+            isProtected: vaultProtected, // Hardcoded as per the requirement
+            password: sessionPassword,
           }
         );
 

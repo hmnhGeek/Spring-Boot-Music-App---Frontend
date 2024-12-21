@@ -4,7 +4,13 @@ import axios from "axios";
 import "./AddSongToPlaylistModal.css"; // For modal styles
 import CustomTypeahead from "../CustomTypeahead/CustomTypeahead";
 
-const AddSongToPlaylistModal = ({ onClose, onAddSong, playlistId }) => {
+const AddSongToPlaylistModal = ({
+  onClose,
+  onAddSong,
+  playlistId,
+  vaultProtected,
+  sessionPassword,
+}) => {
   const [allAvailableSongs, setAllAvailableSongs] = useState([]);
   const [filteredSong, setFilteredSong] = useState([]);
 
@@ -13,7 +19,7 @@ const AddSongToPlaylistModal = ({ onClose, onAddSong, playlistId }) => {
     const fetchSongs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/songs/get-song-list-lite?vaultProtected=false"
+          `${process.env.REACT_APP_SONG_API_BASE}/get-song-list-lite?vaultProtected=${vaultProtected}&password=${sessionPassword}`
         );
         setAllAvailableSongs(response.data); // Assuming data is an array of songs
       } catch (error) {
@@ -41,6 +47,7 @@ const AddSongToPlaylistModal = ({ onClose, onAddSong, playlistId }) => {
           {
             playlistId: playlistId,
             songId: songToAdd.id,
+            password: sessionPassword,
           }
         );
 

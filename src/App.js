@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Vault from "./pages/Vault";
 import OpenPlaylists from "./pages/OpenPlaylists";
 import PlaylistSongs from "./pages/PlaylistSongs";
+import VaultPlaylists from "./pages/VaultPlaylists";
 
 const App = () => {
   return (
@@ -17,6 +18,9 @@ const App = () => {
         </Routes>
         <Routes>
           <Route path="/playlists" element={<OpenPlaylists />} />
+        </Routes>
+        <Routes>
+          <Route path="/protectedPlaylists" element={<VaultPlaylists />} />
         </Routes>
         <Routes>
           <Route path="/playlist" element={<PlaylistSongs />} />

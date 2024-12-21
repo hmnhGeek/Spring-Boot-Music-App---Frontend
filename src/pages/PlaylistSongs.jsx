@@ -18,6 +18,8 @@ const PlaylistSongs = ({
   setSelectedPlaylist,
   setSelectedSong,
   setIsMinimized,
+  sessionPassword,
+  vaultProtected,
 }) => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ const PlaylistSongs = ({
       try {
         if (!playlistId) return;
         const response = await axios.get(
-          `${process.env.REACT_APP_PLAYLIST_API_BASE}/get-songs?playlistId=${playlistId}`
+          `${process.env.REACT_APP_PLAYLIST_API_BASE}/get-songs?playlistId=${playlistId}&password=${sessionPassword}`
         );
         setSongs(response.data);
       } catch (err) {
@@ -60,7 +62,7 @@ const PlaylistSongs = ({
     try {
       // Make the DELETE request
       const response = await axios.delete(
-        `${process.env.REACT_APP_PLAYLIST_API_BASE}/remove-song/${playlistId}/${songId}`
+        `${process.env.REACT_APP_PLAYLIST_API_BASE}/remove-song/${playlistId}/${songId}?password=${sessionPassword}`
       );
 
       // If successful, remove the song from the list
@@ -127,6 +129,8 @@ const PlaylistSongs = ({
           onClose={() => setIsModalOpen(false)}
           onAddSong={handleAddSong}
           playlistId={playlistId}
+          sessionPassword={sessionPassword}
+          vaultProtected={vaultProtected}
         />
       )}
     </div>

@@ -82,6 +82,7 @@ const OpenPlaylists = () => {
             setSelectedPlaylist={setSelectedPlaylist}
             setSelectedSong={setSelectedSong}
             setIsMinimized={setIsMinimized}
+            vaultProtected={false}
           />
         ) : (
           <table className="playlist-table">
@@ -130,6 +131,7 @@ const OpenPlaylists = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleAddPlaylist} // Pass handleAddPlaylist to update the playlists
+        vaultProtected={false}
       />
     </>
   );
