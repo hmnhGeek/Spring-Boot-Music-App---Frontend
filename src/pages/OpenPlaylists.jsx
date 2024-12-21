@@ -18,22 +18,23 @@ const OpenPlaylists = () => {
   const [isMinimized, setIsMinimized] = useState(false); // To track minimize state of SongPlayer
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal open/close state
 
-  useEffect(() => {
-    const fetchPlaylists = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_PLAYLIST_API_BASE}?isProtected=false`
-        );
-        setPlaylists(response.data);
-      } catch (err) {
-        setError("Failed to load playlists. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Function to fetch playlists from the API
+  const fetchPlaylists = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_PLAYLIST_API_BASE}?isProtected=false`
+      );
+      setPlaylists(response.data);
+    } catch (err) {
+      setError("Failed to load playlists. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchPlaylists();
-  }, []);
+  }, []); // Initial load of playlists
 
   const handleMinimizeToggle = () => {
     setIsMinimized((prevState) => !prevState);
@@ -43,10 +44,13 @@ const OpenPlaylists = () => {
     setSelectedPlaylist(playlist); // Set the selected playlist
   };
 
-  const handleAddPlaylist = (playlistName) => {
-    // Logic to add a new playlist (You can add API call here to save it)
-    console.log(`New Playlist Created: ${playlistName}`);
-    setIsModalOpen(false); // Close the modal after submission
+  // Handle the addition of a new playlist
+  const handleAddPlaylist = (newPlaylist) => {
+    // Update the playlists state to include the newly created playlist
+    setPlaylists((prevPlaylists) => [...prevPlaylists, newPlaylist]);
+
+    // Close the modal after the new playlist is added
+    setIsModalOpen(false);
   };
 
   if (loading) return <div>Loading playlists...</div>;
@@ -68,7 +72,7 @@ const OpenPlaylists = () => {
       </div>
 
       <div className="playlist-container">
-        {!selectedPlaylist && <h1 className="title">Open Playlists</h1>}
+        {!selectedPlaylist && <h1 className="title">Playlists</h1>}
 
         {selectedPlaylist ? (
           // If a playlist is selected, render PlaylistSongs with the selected playlist data
@@ -125,7 +129,7 @@ const OpenPlaylists = () => {
       <AddPlaylistModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddPlaylist}
+        onSubmit={handleAddPlaylist} // Pass handleAddPlaylist to update the playlists
       />
     </>
   );
