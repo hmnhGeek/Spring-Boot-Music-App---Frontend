@@ -20,6 +20,7 @@ const VaultPlaylists = () => {
   const [passwordModalVisible, setPasswordModalVisible] = useState(true);
   const [sessionPassword, setSessionPassword] = useState("");
   const [password, setPassword] = useState("");
+  const [counterForNextSong, setCounterForNextSong] = useState(0);
 
   useEffect(() => {
     if (!passwordModalVisible) {
@@ -95,6 +96,12 @@ const VaultPlaylists = () => {
     }
   };
 
+  const onSongEnd = () => {
+    if (selectedSong) {
+      setCounterForNextSong((c) => c + 1);
+    }
+  };
+
   return (
     <>
       {passwordModalVisible && (
@@ -149,6 +156,7 @@ const VaultPlaylists = () => {
                 setIsMinimized={setIsMinimized}
                 sessionPassword={sessionPassword}
                 vaultProtected={true}
+                nextSongTrigger={counterForNextSong}
               />
             ) : (
               <table className="playlist-table">
@@ -191,6 +199,7 @@ const VaultPlaylists = () => {
                   isMinimized={isMinimized}
                   setIsMinimized={setIsMinimized}
                   sessionPassword={sessionPassword}
+                  onSongEnd={onSongEnd}
                 />
               </div>
             )}

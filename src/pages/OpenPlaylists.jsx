@@ -17,6 +17,7 @@ const OpenPlaylists = () => {
   const [selectedPlaylist, setSelectedPlaylist] = useState(null); // State to manage selected playlist
   const [isMinimized, setIsMinimized] = useState(false); // To track minimize state of SongPlayer
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal open/close state
+  const [counterForNextSong, setCounterForNextSong] = useState(0);
 
   // Function to fetch playlists from the API
   const fetchPlaylists = async () => {
@@ -53,6 +54,12 @@ const OpenPlaylists = () => {
     setIsModalOpen(false);
   };
 
+  const onSongEnd = () => {
+    if (selectedSong) {
+      setCounterForNextSong((c) => c + 1);
+    }
+  };
+
   if (loading) return <div>Loading playlists...</div>;
   if (error) return <div>{error}</div>;
 
@@ -83,6 +90,7 @@ const OpenPlaylists = () => {
             setSelectedSong={setSelectedSong}
             setIsMinimized={setIsMinimized}
             vaultProtected={false}
+            nextSongTrigger={counterForNextSong}
           />
         ) : (
           <table className="playlist-table">
@@ -121,6 +129,7 @@ const OpenPlaylists = () => {
               song={selectedSong}
               isMinimized={isMinimized}
               setIsMinimized={setIsMinimized}
+              onSongEnd={onSongEnd}
             />
           </div>
         )}

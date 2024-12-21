@@ -20,11 +20,13 @@ const PlaylistSongs = ({
   setIsMinimized,
   sessionPassword,
   vaultProtected,
+  nextSongTrigger,
 }) => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [songSelected, setSongSelected] = useState(null);
 
   // Fetch the songs for the playlist
   useEffect(() => {
@@ -45,8 +47,18 @@ const PlaylistSongs = ({
     fetchSongs();
   }, [playlistId]); // Only fetch if playlistId changes
 
+  useEffect(() => {
+    let indexOfCurrentSong = songs.indexOf(songSelected);
+    let nextSongIndex = indexOfCurrentSong + 1;
+    if (nextSongIndex >= songs.length) {
+      nextSongIndex = 0;
+    }
+    handlePlayClick(songs[nextSongIndex]);
+  }, [nextSongTrigger]);
+
   const handlePlayClick = (song) => {
     setSelectedSong(song);
+    setSongSelected(song);
     setIsMinimized(false);
   };
 
