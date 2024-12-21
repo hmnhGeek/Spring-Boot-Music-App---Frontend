@@ -6,6 +6,7 @@ import { faTrash, faHome } from "@fortawesome/free-solid-svg-icons";
 import PlaylistSongs from "./PlaylistSongs"; // Import PlaylistSongs component
 import "./OpenPlaylists.css";
 import SongPlayer from "../SongPlayer";
+import AddPlaylistModal from "../components/AddPlaylistModal/AddPlaylistModal";
 
 const OpenPlaylists = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const OpenPlaylists = () => {
   const [selectedSong, setSelectedSong] = useState(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null); // State to manage selected playlist
   const [isMinimized, setIsMinimized] = useState(false); // To track minimize state of SongPlayer
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal open/close state
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -41,6 +43,12 @@ const OpenPlaylists = () => {
     setSelectedPlaylist(playlist); // Set the selected playlist
   };
 
+  const handleAddPlaylist = (playlistName) => {
+    // Logic to add a new playlist (You can add API call here to save it)
+    console.log(`New Playlist Created: ${playlistName}`);
+    setIsModalOpen(false); // Close the modal after submission
+  };
+
   if (loading) return <div>Loading playlists...</div>;
   if (error) return <div>{error}</div>;
 
@@ -50,7 +58,15 @@ const OpenPlaylists = () => {
         <button className="submit-button" onClick={() => navigate("/")}>
           <FontAwesomeIcon icon={faHome} /> Home
         </button>
+        <button
+          className="submit-button"
+          onClick={() => setIsModalOpen(true)} // Open the modal
+          style={{ marginLeft: "10px" }}
+        >
+          Add Playlist
+        </button>
       </div>
+
       <div className="playlist-container">
         {!selectedPlaylist && <h1 className="title">Open Playlists</h1>}
 
@@ -104,6 +120,13 @@ const OpenPlaylists = () => {
           </div>
         )}
       </div>
+
+      {/* AddPlaylistModal */}
+      <AddPlaylistModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAddPlaylist}
+      />
     </>
   );
 };
