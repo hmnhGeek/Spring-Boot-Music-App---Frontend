@@ -1,0 +1,112 @@
+/* Modal overlay to dim background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Slightly darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal content box */
+.modal-content {
+  background: #f9f9f9; /* Soft white for a modern look */
+  padding: 30px; /* Increased padding for better spacing */
+  border-radius: 12px; /* Slightly more rounded corners */
+  width: 450px; /* Increased width for better layout */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow for emphasis */
+  animation: slideUp 0.3s ease-out;
+  font-family: "Arial", sans-serif; /* Clean and professional font */
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Fade-in effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Title styling */
+h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #444;
+  text-align: center;
+}
+
+/* Form group styling */
+.form-group {
+  margin-bottom: 20px; /* Spacing between form elements */
+  font-size: 14px; /* Smaller, professional text size */
+}
+
+label {
+  display: block;
+  font-weight: bold; /* Highlight the label text */
+  margin-bottom: 8px; /* Space between label and input */
+  color: #333; /* Darker text for better readability */
+}
+
+input[type="text"] {
+  padding: 8px; /* Add padding for better usability */
+  border: 1px solid #ccc; /* Light border for input field */
+  border-radius: 6px; /* Rounded corners for input field */
+  background-color: #fff; /* Clean white background */
+  font-size: 14px;
+  color: #333;
+}
+
+/* Button styling */
+.modal-button {
+  padding: 12px 20px; /* Larger padding for prominence */
+  margin: 10px 5px; /* Adjusted spacing */
+  background-color: #007bff; /* Primary button color */
+  color: white;
+  border: none;
+  border-radius: 6px; /* Slightly more rounded corners */
+  font-size: 14px; /* Increased font size for clarity */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition on hover */
+}
+
+.modal-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Subtle lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for hover effect */
+}
+
+/* Close button styling */
+.close-button {
+  background-color: #ccc;
+}
+
+.close-button:hover {
+  background-color: #999;
+}
+
+/* Disabled button styling */
+.modal-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}

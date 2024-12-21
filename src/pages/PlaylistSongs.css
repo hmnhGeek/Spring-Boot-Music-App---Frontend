@@ -1,0 +1,110 @@
+/* PlaylistSongs.css */
+
+.playlist-container {
+  font-family: "Roboto", sans-serif;
+  margin: 40px auto;
+  max-width: 800px;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.title {
+  font-size: 1.8rem;
+  text-align: center;
+  color: #333333;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.no-songs,
+.error {
+  text-align: center;
+  color: #666666;
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+
+.loading {
+  text-align: center;
+  color: #3f51b5;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-top: 20px;
+}
+
+.back-button {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.back-button:hover {
+  background: #303f9f;
+}
+
+.playlist-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.playlist-table th,
+.playlist-table td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.playlist-table th {
+  background: #3f51b5;
+  color: white;
+  font-weight: 500;
+}
+
+.playlist-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Add pointer cursor on hover for clickable playlist names */
+.playlist-table td.clickable:hover {
+  cursor: pointer;
+  color: #3f51b5; /* Optional: Change color for visual feedback */
+}
+
+.play-icon {
+  cursor: pointer;
+  /* font-size: 24px; */
+  color: #007bff; /* You can customize the color */
+}
+
+.play-icon:hover {
+  color: #0056b3; /* Darken color on hover */
+}
+
+.add-button {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  float: right;
+}
+
+.add-button:hover {
+  background: #303f9f;
+}

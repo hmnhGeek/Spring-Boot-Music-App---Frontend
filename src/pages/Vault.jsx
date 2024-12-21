@@ -12,6 +12,7 @@ import {
   faChevronRight,
   faGift,
   faUpload,
+  faMusic,
 } from "@fortawesome/free-solid-svg-icons"; // Import FontAwesome icons
 import CustomTypeahead from "../components/CustomTypeahead/CustomTypeahead";
 
@@ -237,6 +238,12 @@ const Vault = (props) => {
                 onClear={() => setFilteredSong([])}
                 placeholder="Find a song..."
               />
+              <button
+                className="random-song-button"
+                onClick={() => navigate("/protectedPlaylists")}
+              >
+                <FontAwesomeIcon icon={faMusic} /> &nbsp; Playlists
+              </button>
               <button className="random-song-button" onClick={playRandomSong}>
                 <FontAwesomeIcon icon={faGift} /> &nbsp; Surprise Me!
               </button>
