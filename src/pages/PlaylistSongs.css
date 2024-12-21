@@ -90,3 +90,21 @@
 .play-icon:hover {
   color: #0056b3; /* Darken color on hover */
 }
+
+.add-button {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  float: right;
+}
+
+.add-button:hover {
+  background: #303f9f;
+}

@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons"; // Import minimize and restore icons
 import SongPlayer from "../SongPlayer"; // Assuming SongPlayer is in the same folder
 import "./PlaylistSongs.css";
+import AddSongToPlaylistModal from "../components/AddSongToPlaylistModal/AddSongToPlaylistModal";
 
 const PlaylistSongs = ({
   playlistId,
@@ -20,6 +21,7 @@ const PlaylistSongs = ({
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -48,15 +50,24 @@ const PlaylistSongs = ({
     setSelectedPlaylist(null);
   };
 
+  const handleAddSong = (song) => {
+    setSongs((prevSongs) => [...prevSongs, song]);
+  };
+
   if (loading) return <div>Loading songs...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="playlist-container">
       <h1 className="title">{playlistName || "Playlist"}</h1>
-      <button className="back-button" onClick={handleBackClick}>
-        Back
-      </button>
+      <div className="button-container">
+        <button className="back-button" onClick={handleBackClick}>
+          Back
+        </button>
+        <button className="add-button" onClick={() => setIsModalOpen(true)}>
+          Add
+        </button>
+      </div>
       {songs.length === 0 ? (
         <p className="no-songs">No songs available in this playlist.</p>
       ) : (
@@ -82,6 +93,13 @@ const PlaylistSongs = ({
             ))}
           </tbody>
         </table>
+      )}
+      {isModalOpen && (
+        <AddSongToPlaylistModal
+          onClose={() => setIsModalOpen(false)}
+          onAddSong={handleAddSong}
+          playlistId={playlistId}
+        />
       )}
     </div>
   );
