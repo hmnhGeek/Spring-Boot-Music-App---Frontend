@@ -2,16 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faWindowRestore,
-  faWindowMinimize,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faHome } from "@fortawesome/free-solid-svg-icons";
 import PlaylistSongs from "./PlaylistSongs"; // Import PlaylistSongs component
 import "./OpenPlaylists.css";
 import SongPlayer from "../SongPlayer";
 
 const OpenPlaylists = () => {
+  const navigate = useNavigate();
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,56 +45,66 @@ const OpenPlaylists = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="playlist-container">
-      {!selectedPlaylist && <h1 className="title">Open Playlists</h1>}
-      {selectedPlaylist ? (
-        // If a playlist is selected, render PlaylistSongs with the selected playlist data
-        <PlaylistSongs
-          playlistId={selectedPlaylist.id}
-          playlistName={selectedPlaylist.name}
-          setSelectedPlaylist={setSelectedPlaylist}
-          setSelectedSong={setSelectedSong}
-          setIsMinimized={setIsMinimized}
-        />
-      ) : (
-        <table className="playlist-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {playlists.map((playlist) => (
-              <tr key={playlist.id}>
-                <td
-                  className="clickable"
-                  onClick={() => handlePlaylistClick(playlist)}
-                >
-                  {playlist.name}
-                </td>
-                <td>
-                  <FontAwesomeIcon icon={faTrash} className="delete-icon" />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <>
+      <div style={{ margin: "30px", float: "right" }}>
+        <button className="submit-button" onClick={() => navigate("/")}>
+          <FontAwesomeIcon icon={faHome} /> Home
+        </button>
+      </div>
+      <div className="playlist-container">
+        {!selectedPlaylist && <h1 className="title">Open Playlists</h1>}
 
-      {/* SongPlayer Component for playing the selected song */}
-      {selectedSong && (
-        <div
-          className={`song-player-container ${isMinimized ? "minimized" : ""}`}
-        >
-          <SongPlayer
-            song={selectedSong}
-            isMinimized={isMinimized}
+        {selectedPlaylist ? (
+          // If a playlist is selected, render PlaylistSongs with the selected playlist data
+          <PlaylistSongs
+            playlistId={selectedPlaylist.id}
+            playlistName={selectedPlaylist.name}
+            setSelectedPlaylist={setSelectedPlaylist}
+            setSelectedSong={setSelectedSong}
             setIsMinimized={setIsMinimized}
           />
-        </div>
-      )}
-    </div>
+        ) : (
+          <table className="playlist-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {playlists.map((playlist) => (
+                <tr key={playlist.id}>
+                  <td
+                    className="clickable"
+                    onClick={() => handlePlaylistClick(playlist)}
+                  >
+                    {playlist.name}
+                  </td>
+                  <td>
+                    <FontAwesomeIcon icon={faTrash} className="delete-icon" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {/* SongPlayer Component for playing the selected song */}
+        {selectedSong && (
+          <div
+            className={`song-player-container ${
+              isMinimized ? "minimized" : ""
+            }`}
+          >
+            <SongPlayer
+              song={selectedSong}
+              isMinimized={isMinimized}
+              setIsMinimized={setIsMinimized}
+            />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
