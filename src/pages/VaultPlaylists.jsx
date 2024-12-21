@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faHome, faLock } from "@fortawesome/free-solid-svg-icons";
 import PlaylistSongs from "./PlaylistSongs"; // Import PlaylistSongs component
 import "./OpenPlaylists.css";
 import SongPlayer from "../SongPlayer";
@@ -130,12 +130,12 @@ const VaultPlaylists = () => {
 
       {!passwordModalVisible && (
         <>
-          <div style={{ margin: "30px", float: "right" }}>
-            <button className="submit-button" onClick={() => navigate("/")}>
-              <FontAwesomeIcon icon={faHome} /> Home
+          <div style={{ margin: "10px", float: "right" }}>
+            <button className="vault-button" onClick={() => navigate("/vault")}>
+              <FontAwesomeIcon icon={faLock} /> &nbsp; Vault
             </button>
             <button
-              className="submit-button"
+              className="upload-button"
               onClick={() => setIsModalOpen(true)} // Open the modal
               style={{ marginLeft: "10px" }}
             >

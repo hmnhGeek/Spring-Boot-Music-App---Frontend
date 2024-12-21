@@ -66,15 +66,16 @@ const OpenPlaylists = () => {
   return (
     <>
       <div style={{ margin: "30px", float: "right" }}>
-        <button className="submit-button" onClick={() => navigate("/")}>
-          <FontAwesomeIcon icon={faHome} /> Home
-        </button>
         <button
           className="submit-button"
           onClick={() => setIsModalOpen(true)} // Open the modal
           style={{ marginLeft: "10px" }}
         >
           Add Playlist
+        </button>
+        &nbsp;&nbsp;&nbsp;
+        <button className="submit-button" onClick={() => navigate("/")}>
+          <FontAwesomeIcon icon={faHome} /> Home
         </button>
       </div>
 
