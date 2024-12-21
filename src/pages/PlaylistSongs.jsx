@@ -6,6 +6,7 @@ import {
   faPlay,
   faWindowMinimize,
   faWindowRestore,
+  faTrash, // Import trash icon
 } from "@fortawesome/free-solid-svg-icons"; // Import minimize and restore icons
 import SongPlayer from "../SongPlayer"; // Assuming SongPlayer is in the same folder
 import "./PlaylistSongs.css";
@@ -23,6 +24,7 @@ const PlaylistSongs = ({
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Fetch the songs for the playlist
   useEffect(() => {
     const fetchSongs = async () => {
       try {
@@ -54,6 +56,23 @@ const PlaylistSongs = ({
     setSongs((prevSongs) => [...prevSongs, song]);
   };
 
+  const handleDeleteSong = async (songId) => {
+    try {
+      // Make the DELETE request
+      const response = await axios.delete(
+        `${process.env.REACT_APP_PLAYLIST_API_BASE}/remove-song/${playlistId}/${songId}`
+      );
+
+      // If successful, remove the song from the list
+      if (response.status === 200) {
+        setSongs((prevSongs) => prevSongs.filter((song) => song.id !== songId));
+      }
+    } catch (err) {
+      console.error("Error deleting song:", err);
+      setError("Failed to delete song. Please try again later.");
+    }
+  };
+
   if (loading) return <div>Loading songs...</div>;
   if (error) return <div>{error}</div>;
 
@@ -76,6 +95,7 @@ const PlaylistSongs = ({
             <tr>
               <th>Play</th>
               <th>Song Name</th>
+              <th>Delete</th> {/* Added the Delete column */}
             </tr>
           </thead>
           <tbody>
@@ -89,6 +109,14 @@ const PlaylistSongs = ({
                   />
                 </td>
                 <td>{song.originalName}</td>
+                <td>
+                  <FontAwesomeIcon
+                    icon={faTrash} // Trash icon for deletion
+                    className="delete-icon"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleDeleteSong(song.id)} // Call the delete function
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
