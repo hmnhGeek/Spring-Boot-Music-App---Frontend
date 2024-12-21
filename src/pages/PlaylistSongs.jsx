@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,16 +10,16 @@ import {
 import SongPlayer from "../SongPlayer"; // Assuming SongPlayer is in the same folder
 import "./PlaylistSongs.css";
 
-const PlaylistSongs = () => {
+const PlaylistSongs = ({
+  playlistId,
+  playlistName,
+  setSelectedPlaylist,
+  setSelectedSong,
+  setIsMinimized,
+}) => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSong, setSelectedSong] = useState(null);
-  const [isMinimized, setIsMinimized] = useState(false); // To track minimize state of SongPlayer
-
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { playlistId, playlistName } = location.state || {}; // Use state for playlist data
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -41,11 +41,11 @@ const PlaylistSongs = () => {
 
   const handlePlayClick = (song) => {
     setSelectedSong(song);
-    setIsMinimized(false); // Ensure SongPlayer is expanded when a song is selected
+    setIsMinimized(false);
   };
 
-  const handleMinimizeToggle = () => {
-    setIsMinimized((prevState) => !prevState);
+  const handleBackClick = () => {
+    setSelectedPlaylist(null);
   };
 
   if (loading) return <div>Loading songs...</div>;
@@ -53,10 +53,10 @@ const PlaylistSongs = () => {
 
   return (
     <div className="playlist-container">
-      <button className="back-button" onClick={() => navigate(-1)}>
+      <h1 className="title">{playlistName || "Playlist"}</h1>
+      <button className="back-button" onClick={handleBackClick}>
         Back
       </button>
-      <h1 className="title">{playlistName || "Playlist"}</h1>
       {songs.length === 0 ? (
         <p className="no-songs">No songs available in this playlist.</p>
       ) : (
@@ -82,25 +82,6 @@ const PlaylistSongs = () => {
             ))}
           </tbody>
         </table>
-      )}
-
-      {/* SongPlayer Component for playing the selected song */}
-      {selectedSong && (
-        <div
-          className={`song-player-container ${isMinimized ? "minimized" : ""}`}
-        >
-          <button className="minimize-btn" onClick={handleMinimizeToggle}>
-            <FontAwesomeIcon
-              icon={isMinimized ? faWindowRestore : faWindowMinimize}
-              className="minimize-icon"
-            />
-          </button>
-          <SongPlayer
-            song={selectedSong}
-            isMinimized={isMinimized}
-            setIsMinimized={setIsMinimized}
-          />
-        </div>
       )}
     </div>
   );
