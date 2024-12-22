@@ -96,6 +96,22 @@ const VaultPlaylists = () => {
     }
   };
 
+  const handleDeletePlaylist = async (playlistId) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_PLAYLIST_API_BASE}/delete-playlist/${playlistId}?password=${sessionPassword}`
+      );
+      if (response.status === 200) {
+        setPlaylists((prevPlaylists) =>
+          prevPlaylists.filter((playlist) => playlist.id !== playlistId)
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting playlist:", error);
+      alert("Failed to delete the playlist.");
+    }
+  };
+
   const onSongEnd = () => {
     if (selectedSong) {
       setCounterForNextSong((c) => c + 1);
@@ -179,6 +195,8 @@ const VaultPlaylists = () => {
                         <FontAwesomeIcon
                           icon={faTrash}
                           className="delete-icon"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleDeletePlaylist(playlist.id)}
                         />
                       </td>
                     </tr>

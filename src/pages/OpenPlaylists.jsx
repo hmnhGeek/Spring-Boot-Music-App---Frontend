@@ -60,6 +60,22 @@ const OpenPlaylists = () => {
     }
   };
 
+  const handleDeletePlaylist = async (playlistId) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_PLAYLIST_API_BASE}/delete-playlist/${playlistId}`
+      );
+      if (response.status === 200) {
+        setPlaylists((prevPlaylists) =>
+          prevPlaylists.filter((playlist) => playlist.id !== playlistId)
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting playlist:", error);
+      alert("Failed to delete the playlist.");
+    }
+  };
+
   if (loading) return <div>Loading playlists...</div>;
   if (error) return <div>{error}</div>;
 
@@ -111,7 +127,12 @@ const OpenPlaylists = () => {
                     {playlist.name}
                   </td>
                   <td>
-                    <FontAwesomeIcon icon={faTrash} className="delete-icon" />
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      className="delete-icon"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleDeletePlaylist(playlist.id)}
+                    />
                   </td>
                 </tr>
               ))}
