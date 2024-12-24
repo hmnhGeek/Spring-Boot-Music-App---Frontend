@@ -1,0 +1,110 @@
+/* Modal overlay to dim background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Slightly darker overlay for consistency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal content box */
+.modal-content {
+  background: #f9f9f9; /* Soft white for a modern look */
+  padding: 60px; /* Increased padding for better spacing */
+  border-radius: 12px; /* Rounded corners */
+  width: 450px; /* Wider modal for better layout */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow for emphasis */
+  animation: slideUp 0.3s ease-out;
+  font-family: "Arial", sans-serif; /* Clean, professional font */
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Fade-in effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Title styling */
+h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #444;
+  text-align: center; /* Center the title */
+}
+
+/* Button container */
+.modal-buttons {
+  display: flex;
+  /* justify-content: space-between; */
+  margin-top: 20px;
+  float: left;
+}
+
+/* Button styling */
+.modal-button {
+  padding: 12px 20px; /* Larger padding for prominence */
+  margin: 10px 5px; /* Adjusted spacing */
+  background-color: #007bff; /* Primary button color */
+  color: white;
+  border: none;
+  border-radius: 6px; /* Slightly more rounded corners */
+  font-size: 14px; /* Increased font size for clarity */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition on hover */
+}
+
+.modal-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Subtle lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for hover effect */
+}
+
+/* Cancel button styling */
+.modal-button:last-child {
+  background-color: #6c757d; /* Gray for cancel button */
+}
+
+.modal-button:last-child:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+}
+
+/* Disabled button styling */
+.modal-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* Close button styling */
+.close-button {
+  background-color: #ccc;
+  border-radius: 6px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #999;
+}
