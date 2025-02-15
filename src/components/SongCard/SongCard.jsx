@@ -13,20 +13,59 @@ const EditCoverImageModal = ({ songId, isVisible, onClose, refresh }) => {
 
   const handleCoverChangeRequest = async () => {
     const formData = new FormData();
-    formData.append("coverImagePath ", coverImage); // `newCoverFile` should be the selected image file
+    formData.append("coverImagePath", coverImage); // Fix key name
 
-    await axios
-      .put(
+    try {
+      const response = await axios.put(
         `${process.env.REACT_APP_SONG_API_BASE}/change-cover/${songId}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          responseType: "blob", // Ensures we receive a binary file
         }
-      )
-      .then(() => refresh())
-      .catch((err) => console.log(err));
+      );
+
+      // Get content type from response headers (e.g., "image/jpeg")
+      const contentType = response.headers["content-type"] || "image/jpeg"; // Default to JPEG
+
+      // Determine file extension from content type
+      const extensionMap = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/gif": "gif",
+        "image/webp": "webp",
+      };
+      const extension = extensionMap[contentType] || "jpg"; // Fallback to jpg
+
+      // Get filename from content-disposition header (if available)
+      const contentDisposition = response.headers["content-disposition"];
+      let filename = `cover_image.${extension}`; // Default filename
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="(.+?)"/);
+        if (match) filename = match[1];
+      } else {
+        filename = `cover_image.${extension}`; // Use detected extension
+      }
+
+      // Create a download link for the image
+      const blob = new Blob([response.data], { type: contentType });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+
+      // Refresh UI
+      refresh();
+    } catch (err) {
+      console.log("Error downloading image:", err);
+    }
   };
 
   return (
