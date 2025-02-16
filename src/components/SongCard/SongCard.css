@@ -9,6 +9,23 @@
   margin-bottom: 150px;
 }
 
+.edit-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.edit-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 /* Individual song card */
 .song-card {
   width: 200px;
@@ -101,4 +118,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative; /* Ensures absolute positioning works inside */
+  /* display: inline-block; */
 }

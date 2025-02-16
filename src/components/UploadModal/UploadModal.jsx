@@ -81,7 +81,7 @@ const UploadModal = ({ isVisible, onClose, onSubmit }) => {
             <input
               type="file"
               onChange={handleCoverImageChange}
-              accept="image/png"
+              accept="image/*"
             />
           </div>
           <div className="form-group">
